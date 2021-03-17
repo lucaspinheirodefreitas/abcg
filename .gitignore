@@ -28,3 +28,6 @@ compile_commands.json
 public/*.data
 public/*.js
 public/*.wasm
+
+examples/asteroids_old
+examples/helloworld
