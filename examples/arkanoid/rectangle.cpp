@@ -3,157 +3,129 @@
 #include <cppitertools/itertools.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
 
-#include <iostream>
-
 using namespace std;
 
 void Rectangle::initializeGL(GLuint program, int quantity) {
-    terminateGL();
+  terminateGL();
 
-    // Start pseudo-random number generator
-    auto seed{std::chrono::steady_clock::now().time_since_epoch().count()};
-    m_randomEngine.seed(seed);
+  // Start pseudo-random number generator
+  auto seed{std::chrono::steady_clock::now().time_since_epoch().count()};
+  m_randomEngine.seed(seed);
 
-    m_program = program;
-    m_colorLoc = glGetUniformLocation(m_program, "color");
-    m_rotationLoc = glGetUniformLocation(m_program, "rotation");
-    m_scaleLoc = glGetUniformLocation(m_program, "scale");
-    m_translationLoc = glGetUniformLocation(m_program, "translation");
+  m_program = program;
+  m_colorLoc = glGetUniformLocation(m_program, "color");
+  m_rotationLoc = glGetUniformLocation(m_program, "rotation");
+  m_scaleLoc = glGetUniformLocation(m_program, "scale");
+  m_translationLoc = glGetUniformLocation(m_program, "translation");
 
-    // Create arkanoid
-    m_rectangles.clear();
-    m_rectangles.resize(quantity);
+  // Create arkanoid
+  m_rectangles.clear();
+  m_rectangles.resize(quantity);
+  int indiceX = 0, indiceY = 1;
 
-    for (auto &asteroid : m_rectangles) {
-        asteroid = createAsteroid();
-        // Make sure the asteroid won't collide with the ship
-        int vezes;
-        bool distancia;
-
-        do {
-            distancia=false;
-            vezes=0;
-            asteroid.m_translation = {m_randomDistX(m_randomEngine),
-                                      m_randomDistY(m_randomEngine)};
-            for(auto &poligono : m_rectangles) {
-                if((poligono.m_translation.x + 0.25 > asteroid.m_translation.x  && poligono.m_translation.x - 0.25 < asteroid.m_translation.x
-                && poligono.m_translation.y + 0.25 > asteroid.m_translation.y  && poligono.m_translation.y - 0.25 < asteroid.m_translation.y)
-                || (poligono.m_translation.x + 0.25 < asteroid.m_translation.x  && poligono.m_translation.x - 0.25 > asteroid.m_translation.x
-                   && poligono.m_translation.y + 0.25 < asteroid.m_translation.y  && poligono.m_translation.y - 0.25 > asteroid.m_translation.y)) {
-                    distancia = true;
-                } else {
-                    vezes++;
-                }
-            }
-        } while (distancia && vezes<=1);
-
+  for (auto &asteroid : m_rectangles) {
+    if(indiceX<6) {
+      indiceX++;
+      asteroid = createAsteroid(indiceX, indiceY);
+    } else {
+      indiceY++;
+      indiceX=1;
+      asteroid = createAsteroid(indiceX, indiceY);
     }
+  }
 }
 
 void Rectangle::paintGL() {
-    glUseProgram(m_program);
+  glUseProgram(m_program);
 
-    for (auto &rectangles : m_rectangles) {
-        glBindVertexArray(rectangles.m_vao);
+  for (auto &rectangles : m_rectangles) {
 
-        glUniform4fv(m_colorLoc, 1, &rectangles.m_color.r);
-        glUniform1f(m_scaleLoc, rectangles.m_scale);
-        glUniform1f(m_rotationLoc, rectangles.m_rotation);
+    glBindVertexArray(rectangles.m_vao);
 
-        for (auto i : {(1/5), 1}) {
-            for (auto j : {(-1), 0, (1)}) {
-                glUniform2f(m_translationLoc, rectangles.m_translation.x + j,
-                            rectangles.m_translation.y + i);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, rectangles.m_polygonSides + 2);
-            }
-        }
-        glBindVertexArray(0);
-    }
-    glUseProgram(0);
+    glUniform1f(m_scaleLoc, m_scale);
+    glUniform1f(m_rotationLoc, m_rotation);
+    glUniform2fv(m_translationLoc, 1, &rectangles.m_translation.x);
+
+    // Restart thruster blink timer every 100 ms
+
+    glUniform4fv(m_colorLoc, 1, &rectangles.m_color.r);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glBindVertexArray(0);
+  }
+  glUseProgram(0);
 }
 
 void Rectangle::terminateGL() {
-    for (auto rectangles : m_rectangles) {
-        glDeleteBuffers(1, &rectangles.m_vbo);
-        glDeleteVertexArrays(1, &rectangles.m_vao);
-    }
+  for (auto rectangles : m_rectangles) {
+    glDeleteBuffers(1, &rectangles.m_vbo);
+    glDeleteVertexArrays(1, &rectangles.m_vao);
+  }
 }
 
 void Rectangle::update(float deltaTime) {
-    for (auto &rectangles : m_rectangles) {
-        rectangles.m_translation -= 0.5f * deltaTime;
-        rectangles.m_rotation = glm::wrapAngle(
-                rectangles.m_rotation + rectangles.m_angularVelocity * deltaTime);
-        rectangles.m_translation += rectangles.m_velocity * deltaTime;
+  for (auto &rectangles : m_rectangles) {
 
-        // Wrap-around
-        if (rectangles.m_translation.x < -1.0f) rectangles.m_translation.x += 2.0f;
-        if (rectangles.m_translation.x > +1.0f) rectangles.m_translation.x -= 2.0f;
-        if (rectangles.m_translation.y < -1.0f) rectangles.m_translation.y += 2.0f;
-        if (rectangles.m_translation.y > +1.0f) rectangles.m_translation.y -= 2.0f;
-    }
+  }
 }
 
-Rectangle::Rectangles Rectangle::createAsteroid(glm::vec2 translation,
-                                                float scale) {
-    Rectangles rectangle;
+Rectangle::Rectangles Rectangle::createAsteroid(int indiceX, int indiceY) {
+  Rectangles rectangle;
 
-    auto &re{m_randomEngine};  // Shortcut
+  rectangle.m_translation.x = indiceX==1 ? -0.75f : -1+(indiceX*0.30f)-0.05f;
+  rectangle.m_translation.y = indiceY==1 ?  0.97f : 1-(indiceY*0.03f);
 
-    // Randomly choose the number of sides
-    std::uniform_int_distribution<int> randomSides(4, 4);
-    rectangle.m_polygonSides = randomSides(re);
+  std::array<glm::vec2, 4> positions{
+      // Paddle body
+      glm::vec2{-15.0f, 0.0f},
+      glm::vec2{-15.0f, 0.3f},
+      glm::vec2{+15.0f, 0.0f},
+      glm::vec2{+15.0f, 0.3f},
+  };
 
+  // Normalize
+  for (auto &position : positions) {
+    position /= glm::vec2{10.0f, 1.0f};
+  }
 
-    // Choose a random color (actually, a grayscale)
-    std::uniform_real_distribution<float> randomIntensity(0.5f, 1.0f);
-    rectangle.m_color = glm::vec4(1) * randomIntensity(re);
+  std::array indices{0, 1, 2, 3, 0, 2, 1, 3};
 
-    rectangle.m_color.a = 1.0f;
-    rectangle.m_rotation = 0.0f;
-    rectangle.m_scale = scale;
-    rectangle.m_translation = translation;
-    // Choose a random angular velocity
-    rectangle.m_angularVelocity = m_randomDist(re);
+  std::uniform_real_distribution<float> rd(0.15f, 0.85f);
+  glm::vec4 color{rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine)};
+  rectangle.m_color = color;
 
-    // Choose a random direction
-    glm::vec2 direction{m_randomDist(re), m_randomDist(re)};
-    rectangle.m_velocity = glm::normalize(direction) / 7.0f;
+  // Generate VBO
+  glGenBuffers(1, &rectangle.m_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle.m_vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions.data(),
+               GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // Create geometry
-    std::vector<glm::vec2> positions(0);
-    positions.emplace_back(0, 0);
-    auto step{M_PI * 2 / rectangle.m_polygonSides};
-    std::uniform_real_distribution<float> randomRadius(0.8f, 1.0f);
-    for (auto angle : iter::range(0.0, M_PI * 2, step)) {
-        auto radius{randomRadius(re)};
-        positions.emplace_back(radius * std::cos(angle), radius * std::sin(angle));
-    }
-    positions.push_back(positions.at(1));
+  // Generate EBO
+  glGenBuffers(1, &rectangle.m_ebo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectangle.m_ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(),
+               GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    // Generate VBO
-    glGenBuffers(1, &rectangle.m_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, rectangle.m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec2),
-                 positions.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  // Get location of attributes in the program
+  GLint positionAttribute{glGetAttribLocation(m_program, "inPosition")};
 
-    // Get location of attributes in the program
-    GLint positionAttribute{glGetAttribLocation(m_program, "inPosition")};
+  // Create VAO
+  glGenVertexArrays(1, &rectangle.m_vao);
 
-    // Create VAO
-    glGenVertexArrays(1, &rectangle.m_vao);
+  // Bind vertex attributes to current VAO
+  glBindVertexArray(rectangle.m_vao);
 
-    // Bind vertex attributes to current VAO
-    glBindVertexArray(rectangle.m_vao);
+  glEnableVertexAttribArray(positionAttribute);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle.m_vbo);
+  glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, rectangle.m_vbo);
-    glEnableVertexAttribArray(positionAttribute);
-    glVertexAttribPointer(positionAttribute, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectangle.m_ebo);
 
-    // End of binding to current VAO
-    glBindVertexArray(0);
+  // End of binding to current VAO
+  glBindVertexArray(0);
 
-    return rectangle;
+  return rectangle;
 }

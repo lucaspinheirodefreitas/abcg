@@ -43,7 +43,7 @@ private:
     glm::vec2 m_translation{glm::vec2(0)};
 
     abcg::ElapsedTimer m_trailBlinkTimer;
-    abcg::ElapsedTimer m_bulletCoolDownTimer;
+    abcg::ElapsedTimer m_paddleTimer;
 };
 
 #endif //ABCG_PADDLE_HPP
