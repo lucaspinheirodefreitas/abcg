@@ -85,7 +85,7 @@ bool Ball::verifyPosition(Paddle &paddle) {
 
 void Ball::update(Paddle &paddle, const GameData &gameData) {
   if (gameData.m_state == State::Playing &&
-      m_ballTimer.elapsed() > 20.0 / 1000.0) {
+      m_ballTimer.elapsed() > 10.0 / 1000.0) {
     m_ballTimer.restart();
 
     if (m_translation.x >= 0.99f) {
