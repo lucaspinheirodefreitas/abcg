@@ -12,18 +12,15 @@ void Ball::initializeGL(GLuint program) {
   m_randomEngine.seed(seed);
   std::uniform_int_distribution<int> intDistribution(0, 1);
   intDistribution(m_randomEngine) == 1 ? m_esquerda = true : m_direita = true;
+  m_baixo = true;
+  m_defense = false;
 
   m_program = program;
   m_colorLoc = glGetUniformLocation(m_program, "color");
   m_scaleLoc = glGetUniformLocation(m_program, "scale");
   m_translationLoc = glGetUniformLocation(m_program, "translation");
-  m_velocity = glm::vec2(2.0f / 7.0f);
+  m_translation = glm::vec2(0, 0.7f);
 
-  // Choose a random direction
-
-  m_translation = glm::vec2(0);
-
-  // Create regular polygon
   auto sides{10};
 
   std::vector<glm::vec2> positions(0);
@@ -78,68 +75,68 @@ void Ball::paintGL() {
 void Ball::terminateGL() {
   glDeleteBuffers(1, &m_vbo);
   glDeleteVertexArrays(1, &m_vao);
+  m_esquerda = false, m_direita = false, m_cima = false;
 }
 
 bool Ball::verifyPosition(Paddle &paddle) {
-  return paddle.m_translation.x - 0.12 <= m_translation.x &&
-         paddle.m_translation.x + 0.12 >= m_translation.x;
+  return m_defense = paddle.m_translation.x - 0.12 <= m_translation.x &&
+                     paddle.m_translation.x + 0.12 >= m_translation.x;
 }
 
 void Ball::update(Paddle &paddle, const GameData &gameData) {
-  if (gameData.m_state == State::Playing) {
-    if (m_ballTimer.elapsed() > 50.0 / 1000.0) {
-      m_ballTimer.restart();
+  if (gameData.m_state == State::Playing &&
+      m_ballTimer.elapsed() > 20.0 / 1000.0) {
+    m_ballTimer.restart();
 
-      if (m_translation.x >= 0.99f) {
-        m_esquerda = true;
-        m_direita = false;
-      }
-      if (m_translation.x <= -0.99f) {
-        m_esquerda = false;
-        m_direita = true;
-      }
-      if (m_translation.y >= 0.99f) {
-        m_baixo = true;
-        m_cima = false;
-      }
-      if (verifyPosition(paddle) && m_translation.y <= -0.87f) {
-        m_baixo = false;
-        m_cima = true;
-        cout << "Defense - Y : " << m_translation.y << endl;
+    if (m_translation.x >= 0.99f) {
+      m_esquerda = true;
+      m_direita = false;
+    }
+    if (m_translation.x <= -0.99f) {
+      m_esquerda = false;
+      m_direita = true;
+    }
+    if (m_translation.y >= 0.99f) {
+      m_baixo = true;
+      m_cima = false;
+    }
+    if (m_defense) {
+      m_baixo = false;
+      m_cima = true;
+      m_defense = false;
+    }
+
+    if (m_esquerda) {
+      if (m_translation.x < -0.0f) {
+        m_translation.x - 0.01f < -0.99f ? m_translation.x = -0.99f
+                                         : m_translation.x -= 0.01f;
+      } else {
+        m_translation.x -= 0.01;
       }
 
-      if (m_esquerda) {
-        if (m_translation.x < -0.0f) {
-          m_translation.x - 0.05f < -0.99f ? m_translation.x = -0.99f
-                                           : m_translation.x -= 0.05f;
-        } else {
-          m_translation.x -= 0.05;
-        }
-
-      } else if (m_direita) {
-        if (m_translation.x < -0.0f) {
-          m_translation.x += 0.05;
-        } else {
-          m_translation.x + 0.05f < 0.99f ? m_translation.x += 0.05f
-                                          : m_translation.x = 0.99f;
-        }
+    } else if (m_direita) {
+      if (m_translation.x < -0.0f) {
+        m_translation.x += 0.01;
+      } else {
+        m_translation.x + 0.01f < 0.99f ? m_translation.x += 0.01f
+                                        : m_translation.x = 0.99f;
       }
-      if (m_baixo) {
-        if (m_translation.y < -0.0f) {
-          m_translation.y - 0.05f > -0.87f
-              ? m_translation.y -= 0.05
-              : (verifyPosition(paddle) ? m_translation.y = -0.87f
-                                        : m_translation.y -= 0.05);
-        } else {
-          m_translation.y -= 0.05;
-        }
-      } else if (m_cima) {
-        if (m_translation.y < -0.0f) {
-          m_translation.y += 0.05f;
-        } else {
-          m_translation.y + 0.05f < 0.99f ? m_translation.y += 0.05f
-                                          : m_translation.y = 0.99f;
-        }
+    }
+    if (m_baixo) {
+      if (m_translation.y < -0.0f) {
+        m_translation.y - 0.01f > -0.87f
+            ? m_translation.y -= 0.01
+            : (verifyPosition(paddle) ? m_translation.y = -0.87f
+                                      : m_translation.y -= 0.01);
+      } else {
+        m_translation.y -= 0.01;
+      }
+    } else if (m_cima) {
+      if (m_translation.y < -0.0f) {
+        m_translation.y += 0.01f;
+      } else {
+        m_translation.y + 0.01f < 0.99f ? m_translation.y += 0.01f
+                                        : m_translation.y = 0.99f;
       }
     }
   }

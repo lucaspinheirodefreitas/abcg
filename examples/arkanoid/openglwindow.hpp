@@ -10,7 +10,6 @@
 #include "gamedata.hpp"
 #include "paddle.hpp"
 #include "rectangle.hpp"
-#include "starlayers.hpp"
 
 class OpenGLWindow : public abcg::OpenGLWindow {
  protected:
@@ -22,6 +21,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void terminateGL() override;
   void checkCollisions();
   void checkWinCondition();
+  void checkLossCondition();
 
  private:
   GLuint m_starsProgram{};
@@ -35,7 +35,6 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   Rectangle m_rectangle;
   Ball m_ball;
   Paddle m_paddle;
-  StarLayers m_starLayers;
 
   abcg::ElapsedTimer m_restartWaitTimer;
 

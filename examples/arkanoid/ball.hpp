@@ -1,7 +1,3 @@
-//
-// Created by mohammed on 12/03/2021.
-//
-
 #ifndef BALL_HPP
 #define BALL_HPP
 
@@ -29,13 +25,11 @@ class Ball {
   GLint m_translationLoc{};
   GLint m_scaleLoc{};
   glm::vec2 m_translation{glm::vec2(0)};
-  glm::vec2 m_velocity{glm::vec2(0)};
 
   GLuint m_vao{};
   GLuint m_vbo{};
-  bool m_start = true;
-  bool m_esquerda = false, m_direita = false,
-       m_cima = false, m_baixo = true;
+  bool m_defense;
+  bool m_esquerda, m_direita, m_cima, m_baixo;
   float m_scale{0.01f};
   abcg::ElapsedTimer m_ballTimer;
   std::default_random_engine m_randomEngine;

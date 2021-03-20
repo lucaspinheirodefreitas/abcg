@@ -15,8 +15,6 @@ class Rectangle {
   void paintGL();
   void terminateGL();
 
-  void update(float deltaTime);
-
  private:
   friend OpenGLWindow;
 
@@ -31,11 +29,9 @@ class Rectangle {
     GLuint m_vbo{};
     GLuint m_ebo{};
 
-    float m_angularVelocity{};
     glm::vec4 m_color{1};
-    bool m_hit{false};
+    bool m_dead{false};
     glm::vec2 m_translation{glm::vec2(0)};
-    glm::vec2 m_velocity{glm::vec2(0)};
   };
   float m_scale = 0.1f;
   float m_rotation = 0.0f;

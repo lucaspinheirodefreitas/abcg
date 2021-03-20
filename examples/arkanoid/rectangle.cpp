@@ -1,7 +1,6 @@
 #include "rectangle.hpp"
 
 #include <cppitertools/itertools.hpp>
-#include <glm/gtx/fast_trigonometry.hpp>
 
 using namespace std;
 
@@ -21,7 +20,7 @@ void Rectangle::initializeGL(GLuint program, int quantity) {
   // Create arkanoid
   m_rectangles.clear();
   m_rectangles.resize(quantity);
-  int indiceX = 0, indiceY = 1;
+  int indiceX = 0, indiceY = 0;
 
   for (auto &asteroid : m_rectangles) {
     if(indiceX<6) {
@@ -45,9 +44,6 @@ void Rectangle::paintGL() {
     glUniform1f(m_scaleLoc, m_scale);
     glUniform1f(m_rotationLoc, m_rotation);
     glUniform2fv(m_translationLoc, 1, &rectangles.m_translation.x);
-
-    // Restart thruster blink timer every 100 ms
-
     glUniform4fv(m_colorLoc, 1, &rectangles.m_color.r);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -63,17 +59,11 @@ void Rectangle::terminateGL() {
   }
 }
 
-void Rectangle::update(float deltaTime) {
-  for (auto &rectangles : m_rectangles) {
-
-  }
-}
-
 Rectangle::Rectangles Rectangle::createAsteroid(int indiceX, int indiceY) {
   Rectangles rectangle;
 
-  rectangle.m_translation.x = indiceX==1 ? -0.75f : -1+(indiceX*0.30f)-0.05f;
-  rectangle.m_translation.y = indiceY==1 ?  0.97f : 1-(indiceY*0.03f);
+  rectangle.m_translation.x = indiceX==1 ? -0.75f : -1+((indiceX)*0.30f)-0.05f;
+  rectangle.m_translation.y = indiceY+1==1 ?  0.97f : 1-((indiceY+1)*0.03f);
 
   std::array<glm::vec2, 4> positions{
       // Paddle body
@@ -89,10 +79,15 @@ Rectangle::Rectangles Rectangle::createAsteroid(int indiceX, int indiceY) {
   }
 
   std::array indices{0, 1, 2, 3, 0, 2, 1, 3};
-
-  std::uniform_real_distribution<float> rd(0.15f, 0.85f);
-  glm::vec4 color{rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine)};
-  rectangle.m_color = color;
+  if((indiceX+indiceY)%2==0) {
+    glm::vec4 color{0,0,0,1};
+    rectangle.m_color = color;
+  } else {
+    glm::vec4 color{0.5,0.5,0.5,1};
+    rectangle.m_color = color;
+  }
+  /*std::uniform_real_distribution<float> rd(0.15f, 0.85f);
+  glm::vec4 color{rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine), rd(m_randomEngine)};*/
 
   // Generate VBO
   glGenBuffers(1, &rectangle.m_vbo);

@@ -12,7 +12,6 @@
 class Rectangle;
 class Ball;
 class OpenGLWindow;
-class StarLayers;
 
 class Paddle {
 public:
@@ -25,7 +24,6 @@ private:
     friend Rectangle;
     friend Ball;
     friend OpenGLWindow;
-    friend StarLayers;
 
     GLuint m_program{};
     GLint m_translationLoc{};

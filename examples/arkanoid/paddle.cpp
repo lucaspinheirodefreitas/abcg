@@ -93,17 +93,17 @@ void Paddle::terminateGL() {
 
 void Paddle::update(const GameData &gameData) {
 
-  if (m_paddleTimer.elapsed() > 25.0 / 1000.0) {
+  if (m_paddleTimer.elapsed() > 10.0 / 1000.0) {
 
     m_paddleTimer.restart();
 
     if (gameData.m_input[static_cast<size_t>(Input::Left)]) {
-      if (m_translation.x - 0.05f >= -1.0f) m_translation.x -= 0.05f;
+      if (m_translation.x - 0.01f >= -1.0f) m_translation.x -= 0.01f;
       if (m_translation.x - 0.12f < -1.0f) m_translation.x = -0.88f;
     }
 
     if (gameData.m_input[static_cast<size_t>(Input::Right)]) {
-      if (m_translation.x + 0.05f <= +1.0f) m_translation.x += 0.05f;
+      if (m_translation.x + 0.01f <= +1.0f) m_translation.x += 0.01f;
       if (m_translation.x + 0.12f > 1.0f) m_translation.x = 0.88f;
     }
   }
