@@ -1,6 +1,4 @@
-Compilação:
->source ./emsdk_env.sh
-
+>https://lucaspinheirodefreitas.github.io/abcg/arkanoid/index.html
 # ABCg
 
 Development framework accompanying the course [MCTA008-17 Computer Graphics](http://professor.ufabc.edu.br/~harlen.batagelo/cg/) at [UFABC](https://www.ufabc.edu.br/).
