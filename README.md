@@ -1,8 +1,7 @@
 # Feature:
 Desenvolvimento de jogo similar ao Arkanoid. 
 <p>Construído sobre o framework abcg, e utilizando como base o jogo asteroids.</p>
-![Alt text](./examples/arkanoid/assets/arkanoid.png?raw=true "Title")
-![plot](./examples/arkanoid/assets/arkanoid.png)
+<img src="/examples/arkanoid/assets/arkanoid.jpg">
 <p>A premissa do jogo é utilizar a bola para destruir todos os retangulos presentes no cenário sem deixar que a bola caia.</p>
 
 # GitHub Page:
