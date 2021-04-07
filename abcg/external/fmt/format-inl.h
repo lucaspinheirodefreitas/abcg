@@ -1443,7 +1443,7 @@ class bigint {
     exp_ *= 2;
   }
 
-  // If this bigint has a bigger exponent than other, adds trailing zero to make
+  // If this bigint has a bigger exponent than other, adds trailing zero to maze
   // exponents equal. This simplifies some operations such as subtraction.
   void align(const bigint& other) {
     int exp_difference = exp_ - other.exp_;
@@ -2320,7 +2320,7 @@ void fallback_format(Double d, int num_digits, bool binary32, buffer<char>& buf,
   bigint* upper = nullptr;  // (M^+ in (FPP)^2).
   fp value;
   // Shift numerator and denominator by an extra bit or two (if lower boundary
-  // is closer) to make lower and upper integers. This eliminates multiplication
+  // is closer) to maze lower and upper integers. This eliminates multiplication
   // by 2 during later computations.
   const bool is_predecessor_closer =
       binary32 ? value.assign(static_cast<float>(d)) : value.assign(d);

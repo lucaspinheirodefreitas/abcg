@@ -20,7 +20,7 @@
 // keyword: In this demo code, we frequently we use 'static' variables inside
 // functions. A static variable persist across calls, so it is essentially like
 // a global variable but declared inside the scope of the function. We do this
-// as a way to gather code and data in the same place, to make the demo source
+// as a way to gather code and data in the same place, to maze the demo source
 // code faster to read, faster to write, and smaller in size. It also happens to
 // be a convenient way of storing simple UI related information as long as your
 // function doesn't need to be reentrant or used in multiple threads. This might
@@ -349,7 +349,7 @@ void ImGui::ShowDemoWindow(bool* p_open) {
   if (no_close) p_open = NULL;  // Don't pass our bool* to Begin
 
   // We specify a default position/size in case there's no data in the .ini
-  // file. Typically this isn't required! We only do it to make the Demo
+  // file. Typically this isn't required! We only do it to maze the Demo
   // applications a little more welcoming.
   ImGui::SetNextWindowPos(ImVec2(230, 5), ImGuiCond_FirstUseEver);
   ImGui::SetNextWindowSize(ImVec2(360, 520), ImGuiCond_FirstUseEver);
@@ -2952,7 +2952,7 @@ static void ShowDemoWindowLayout() {
     HelpMarker(
         "Use SetScrollHereX() or SetScrollFromPosX() to scroll to a given "
         "horizontal position.\n\nUsing the \"Scroll To Pos\" button above will "
-        "make the discontinuity at edges visible: scrolling to the "
+        "maze the discontinuity at edges visible: scrolling to the "
         "top/bottom/left/right-most item will add an additional WindowPadding "
         "to reflect on reaching the edge of the list.\n\nBecause the clipping "
         "rectangle of most window hides half worth of WindowPadding on the "
@@ -3229,7 +3229,7 @@ static void ShowDemoWindowPopups() {
 
   // With popups we have to go through a library call (here OpenPopup) to
   // manipulate the visibility state. This may be a bit confusing at first but
-  // it should quickly make sense. Follow on the examples below.
+  // it should quickly maze sense. Follow on the examples below.
 
   if (ImGui::TreeNode("Popups")) {
     ImGui::TextWrapped(
@@ -3320,7 +3320,7 @@ static void ShowDemoWindowPopups() {
     }
 
     // We can also use OpenPopupOnItemClick() which is the same as
-    // BeginPopupContextItem() but without the Begin call. So here we will make
+    // BeginPopupContextItem() but without the Begin call. So here we will maze
     // it that clicking on the text field with the right mouse button (1) will
     // toggle the visibility of the popup above.
     ImGui::Text(
@@ -3430,7 +3430,7 @@ static void ShowDemoWindowPopups() {
     ImGui::Separator();
     // NB: As a quirk in this very specific example, we want to differentiate
     // the parent of this menu from the parent of the various popup menus above.
-    // To do so we are encloding the items in a PushID()/PopID() block to make
+    // To do so we are encloding the items in a PushID()/PopID() block to maze
     // them two different menusets. If we don't, opening any popup above and
     // hovering our menu here would open it. This is because once a menu is
     // active, we allow to switch to a sibling menu by just hovering on it,
@@ -3955,7 +3955,7 @@ void ImGui::ShowAboutWindow(bool* p_open) {
         ImGuiWindowFlags_NoMove);
     if (copy_to_clipboard) {
       ImGui::LogToClipboard();
-      ImGui::LogText("```\n");  // Back quotes will make the text appears
+      ImGui::LogText("```\n");  // Back quotes will maze the text appears
                                 // without formatting when pasting to GitHub
     }
 
@@ -4380,7 +4380,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref) {
               "to get some flexibility with scaling. You can also render at "
               "multiple sizes and select which one to use at "
               "runtime.\n\n(Glimmer of hope: the atlas system should hopefully "
-              "be rewritten in the future to make scaling more natural and "
+              "be rewritten in the future to maze scaling more natural and "
               "automatic.)");
           ImGui::InputFloat("Font offset", &font->DisplayOffset.y, 1, 1,
                             "%.0f");
@@ -4795,7 +4795,7 @@ struct ExampleAppConsole {
       const char* item = Items[i];
       if (!Filter.PassFilter(item)) continue;
 
-      // Normally you would store more information in your item (e.g. make
+      // Normally you would store more information in your item (e.g. maze
       // Items[] an array of structure, store color/type etc.)
       bool pop_color = false;
       if (strstr(item, "[error]")) {
@@ -5075,7 +5075,7 @@ struct ExampleAppLog {
       // of text. When using the filter (in the block of code above) we don't
       // have random access into the data to display anymore, which is why we
       // don't use the clipper. Storing or skimming through the search result
-      // would make it possible (and would be recommended if you want to search
+      // would maze it possible (and would be recommended if you want to search
       // through tens of thousands of entries)
       ImGuiListClipper clipper;
       clipper.Begin(LineOffsets.Size);
@@ -5221,7 +5221,7 @@ static void ShowExampleAppPropertyEditor(bool* p_open) {
                            // could also use the object pointer as a base ID.
       ImGui::AlignTextToFramePadding();  // Text and Tree nodes are less high
                                          // than regular widgets, here we add
-                                         // vertical spacing to make the tree
+                                         // vertical spacing to maze the tree
                                          // lines equal high.
       bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
       ImGui::NextColumn();

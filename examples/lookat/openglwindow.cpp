@@ -1,10 +1,11 @@
-#include "openglwindow.h"
+#include "openglwindow.hpp"
 
 #include <fmt/core.h>
 #include <imgui.h>
 #include <tiny_obj_loader.h>
 
 #include <cppitertools/itertools.hpp>
+#include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/hash.hpp>
 #include <unordered_map>
 
@@ -61,7 +62,7 @@ void OpenGLWindow::initializeGL() {
                                     getAssetsPath() + "lookat.frag");
 
   // Load model
-  loadModelFromFile(getAssetsPath() + "MazeV1.obj");
+  loadModelFromFile(getAssetsPath() + "bunny.obj");
 
   // Generate VBO
   glGenBuffers(1, &m_VBO);
@@ -132,7 +133,7 @@ void OpenGLWindow::loadModelFromFile(std::string_view path) {
     // Loop over faces(polygon)
     size_t indexOffset{0};
     for (const auto faceNumber :
-        iter::range(shape.mesh.num_face_vertices.size())) {
+         iter::range(shape.mesh.num_face_vertices.size())) {
       // Number of vertices composing face f
       std::size_t numFaceVertices{shape.mesh.num_face_vertices[faceNumber]};
       // Loop over vertices in the face
@@ -190,18 +191,45 @@ void OpenGLWindow::paintGL() {
   // Draw white bunny
   glm::mat4 model{1.0f};
   model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
-  model = glm::scale(model, glm::vec3(1.2f));
+  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0, 1, 0));
+  model = glm::scale(model, glm::vec3(0.5f));
 
   glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
-  glUniform4f(colorLoc, 1.0f, 0.9f, 0.7f, 0.6f);
+  glUniform4f(colorLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  // Draw yellow bunny
+  model = glm::mat4(1.0);
+  model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
+  model = glm::scale(model, glm::vec3(0.5f));
+
+  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  glUniform4f(colorLoc, 1.0f, 0.8f, 0.0f, 1.0f);
+  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  // Draw blue bunny
+  model = glm::mat4(1.0);
+  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0, 1, 0));
+  model = glm::scale(model, glm::vec3(0.5f));
+
+  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  glUniform4f(colorLoc, 0.0f, 0.8f, 1.0f, 1.0f);
+  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  // Draw red bunny
+  model = glm::mat4(1.0);
+  model = glm::scale(model, glm::vec3(0.1f));
+
+  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  glUniform4f(colorLoc, 1.0f, 0.25f, 0.25f, 1.0f);
   glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);
   glUseProgram(0);
 }
 
-void OpenGLWindow::paintUI() { }//abcg::OpenGLWindow::paintUI(); }
+void OpenGLWindow::paintUI() { abcg::OpenGLWindow::paintUI(); }
 
 void OpenGLWindow::resizeGL(int width, int height) {
   m_viewportWidth = width;

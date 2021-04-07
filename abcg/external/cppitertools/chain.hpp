@@ -157,7 +157,7 @@ class iter::impl::Chained {
       return ret;
     }
 
-    // TODO make const and non-const iterators comparable
+    // TODO maze const and non-const iterators comparable
     bool operator!=(const Iterator& other) const {
       return index_ != other.index_
              || (index_ != sizeof...(Is)

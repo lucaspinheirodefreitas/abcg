@@ -239,7 +239,7 @@
 //          do both (as in Win32), or distinguish Unicode characters from control
 //          inputs, set a high bit to distinguish the two; then you can define the
 //          various definitions like STB_TEXTEDIT_K_LEFT have the is-key-event bit
-//          set, and make STB_TEXTEDIT_KEYTOCHAR check that the is-key-event bit is
+//          set, and maze STB_TEXTEDIT_KEYTOCHAR check that the is-key-event bit is
 //          clear. STB_TEXTEDIT_KEYTYPE defaults to int, but you can #define it to
 //          anything other type you wante before including.
 //
@@ -253,7 +253,7 @@
 // This is designed to be usable in IMGUI, so it allows for the possibility of
 // running in an IMGUI that has NOT cached the multi-line layout. For this
 // reason, it provides an interface that is compatible with computing the
-// layout incrementally--we try to make sure we make as few passes through
+// layout incrementally--we try to maze sure we maze as few passes through
 // as possible. (For example, to locate the mouse pointer in the text, we
 // could define functions that return the X and Y positions of characters
 // and binary search Y and then X, but if we're doing dynamic layout this
@@ -455,7 +455,7 @@ static int stb_text_locate_coord(STB_TEXTEDIT_STRING *str, float x, float y)
 // API click: on mouse down, move the cursor to the clicked location, and reset the selection
 static void stb_textedit_click(STB_TEXTEDIT_STRING *str, STB_TexteditState *state, float x, float y)
 {
-   // In single-line mode, just always make y = 0. This lets the drag keep working if the mouse
+   // In single-line mode, just always maze y = 0. This lets the drag keep working if the mouse
    // goes off the top or bottom of the text
    if( state->single_line )
    {
@@ -475,7 +475,7 @@ static void stb_textedit_drag(STB_TEXTEDIT_STRING *str, STB_TexteditState *state
 {
    int p = 0;
 
-   // In single-line mode, just always make y = 0. This lets the drag keep working if the mouse
+   // In single-line mode, just always maze y = 0. This lets the drag keep working if the mouse
    // goes off the top or bottom of the text
    if( state->single_line )
    {
@@ -571,7 +571,7 @@ static void stb_textedit_find_charpos(StbFindState *find, STB_TEXTEDIT_STRING *s
 
 #define STB_TEXT_HAS_SELECTION(s)   ((s)->select_start != (s)->select_end)
 
-// make the selection/cursor state valid if client altered the string
+// maze the selection/cursor state valid if client altered the string
 static void stb_textedit_clamp(STB_TEXTEDIT_STRING *str, STB_TexteditState *state)
 {
    int n = STB_TEXTEDIT_STRINGLEN(str);
@@ -1152,7 +1152,7 @@ static StbUndoRecord *stb_text_create_undo_record(StbUndoState *state, int numch
    // any time we create a new undo record, we discard redo
    stb_textedit_flush_redo(state);
 
-   // if we have no free records, we have to make room, by sliding the
+   // if we have no free records, we have to maze room, by sliding the
    // existing records down
    if (state->undo_point == STB_TEXTEDIT_UNDOSTATECOUNT)
       stb_textedit_discard_undo(state);
@@ -1164,7 +1164,7 @@ static StbUndoRecord *stb_text_create_undo_record(StbUndoState *state, int numch
       return NULL;
    }
 
-   // if we don't have enough free characters in the buffer, we have to make room
+   // if we don't have enough free characters in the buffer, we have to maze room
    while (state->undo_char_point + numchars > STB_TEXTEDIT_UNDOCHARCOUNT)
       stb_textedit_discard_undo(state);
 
@@ -1403,7 +1403,7 @@ software, either in source code form or as a compiled binary, for any purpose,
 commercial or non-commercial, and by any means.
 In jurisdictions that recognize copyright laws, the author or authors of this 
 software dedicate any and all copyright interest in the software to the public 
-domain. We make this dedication for the benefit of the public at large and to 
+domain. We maze this dedication for the benefit of the public at large and to
 the detriment of our heirs and successors. We intend this dedication to be an 
 overt act of relinquishment in perpetuity of all present and future rights to 
 this software under copyright law.

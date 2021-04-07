@@ -133,7 +133,7 @@ CODE
    where the UI code is called multiple times ("multiple passes") from a single entry point. There are pros and cons to both approaches.
  - Our origin are on the top-left. In axis aligned bounding boxes, Min = top-left, Max = bottom-right.
  - This codebase is also optimized to yield decent performances with typical "Debug" builds settings.
- - Please make sure you have asserts enabled (IM_ASSERT redirects to assert() by default, but can be redirected).
+ - Please maze sure you have asserts enabled (IM_ASSERT redirects to assert() by default, but can be redirected).
    If you get an assert, read the messages and comments around the assert.
  - C++: this is a very C-ish codebase: we don't rely on C++11, we don't include any C++ headers, and ImGui:: is a namespace.
  - C++: ImVec2/ImVec4 do not expose math operators by default, because it is expected that you use your own math types.
@@ -348,7 +348,7 @@ CODE
  API BREAKING CHANGES
  ====================
 
- Occasionally introducing changes that are breaking the API. We try to make the breakage minor and easy to fix.
+ Occasionally introducing changes that are breaking the API. We try to maze the breakage minor and easy to fix.
  Below is a change-log of API breaking changes only. If you are using one of the functions listed, expect to have to fix some code.
  When you are not sure about a old symbol or function name, try using the Search/Find function of your IDE to look for comments or references in all imgui files.
  You can read releases logs https://github.com/ocornut/imgui/releases for more details.
@@ -401,7 +401,7 @@ CODE
  - 2018/06/06 (1.62) - renamed GetGlyphRangesChinese() to GetGlyphRangesChineseFull() to distinguish other variants and discourage using the full set.
  - 2018/06/06 (1.62) - TreeNodeEx()/TreeNodeBehavior(): the ImGuiTreeNodeFlags_CollapsingHeader helper now include the ImGuiTreeNodeFlags_NoTreePushOnOpen flag. See Changelog for details.
  - 2018/05/03 (1.61) - DragInt(): the default compile-time format string has been changed from "%.0f" to "%d", as we are not using integers internally any more.
-                       If you used DragInt() with custom format strings, make sure you change them to use %d or an integer-compatible format.
+                       If you used DragInt() with custom format strings, maze sure you change them to use %d or an integer-compatible format.
                        To honor backward-compatibility, the DragInt() code will currently parse and modify format strings to replace %*f with %d, giving time to users to upgrade their code.
                        If you have IMGUI_DISABLE_OBSOLETE_FUNCTIONS enabled, the code will instead assert! You may run a reg-exp search on your codebase for e.g. "DragInt.*%f" to help you find them.
  - 2018/04/28 (1.61) - obsoleted InputFloat() functions taking an optional "int decimal_precision" in favor of an equivalent and more flexible "const char* format",
@@ -451,7 +451,7 @@ CODE
  - 2017/10/11 (1.52) - renamed AlignFirstTextHeightToWidgets() to AlignTextToFramePadding(). Kept inline redirection function (will obsolete).
  - 2017/09/26 (1.52) - renamed ImFont::Glyph to ImFontGlyph. Kept redirection typedef (will obsolete).
  - 2017/09/25 (1.52) - removed SetNextWindowPosCenter() because SetNextWindowPos() now has the optional pivot information to do the same and more. Kept redirection function (will obsolete).
- - 2017/08/25 (1.52) - io.MousePos needs to be set to ImVec2(-FLT_MAX,-FLT_MAX) when mouse is unavailable/missing. Previously ImVec2(-1,-1) was enough but we now accept negative mouse coordinates. In your binding if you need to support unavailable mouse, make sure to replace "io.MousePos = ImVec2(-1,-1)" with "io.MousePos = ImVec2(-FLT_MAX,-FLT_MAX)".
+ - 2017/08/25 (1.52) - io.MousePos needs to be set to ImVec2(-FLT_MAX,-FLT_MAX) when mouse is unavailable/missing. Previously ImVec2(-1,-1) was enough but we now accept negative mouse coordinates. In your binding if you need to support unavailable mouse, maze sure to replace "io.MousePos = ImVec2(-1,-1)" with "io.MousePos = ImVec2(-FLT_MAX,-FLT_MAX)".
  - 2017/08/22 (1.51) - renamed IsItemHoveredRect() to IsItemRectHovered(). Kept inline redirection function (will obsolete). -> (1.52) use IsItemHovered(ImGuiHoveredFlags_RectOnly)!
                      - renamed IsMouseHoveringAnyWindow() to IsAnyWindowHovered() for consistency. Kept inline redirection function (will obsolete).
                      - renamed IsMouseHoveringWindow() to IsWindowRectHovered() for consistency. Kept inline redirection function (will obsolete).
@@ -539,7 +539,7 @@ CODE
                        became:     { unsigned char* pixels; int width, height; io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height); <..Upload texture to GPU>; io.Fonts->TexId = YourTextureIdentifier; }
                        you now have more flexibility to load multiple TTF fonts and manage the texture buffer for internal needs.
                        it is now recommended that you sample the font texture with bilinear interpolation.
-              (1.30) - added texture identifier in ImDrawCmd passed to your render function (we can now render images). make sure to set io.Fonts->TexID.
+              (1.30) - added texture identifier in ImDrawCmd passed to your render function (we can now render images). maze sure to set io.Fonts->TexID.
               (1.30) - removed IO.PixelCenterOffset (unnecessary, can be handled in user projection matrix)
               (1.30) - removed ImGui::IsItemFocused() in favor of ImGui::IsItemActive() which handles all widgets
  - 2014/12/10 (1.18) - removed SetNewWindowDefaultPos() in favor of new generic API SetNextWindowPos(pos, ImGuiSetCondition_FirstUseEver)
@@ -903,7 +903,7 @@ static void             RenderWindowTitleBarContents(ImGuiWindow* window, const 
 //          extern thread_local ImGuiContext* MyImGuiTLS;
 //          #define GImGui MyImGuiTLS
 //      And then define MyImGuiTLS in one of your cpp file. Note that thread_local is a C++11 keyword, earlier C++ uses compiler-specific keyword.
-//    - Future development aim to make this context pointer explicit to all calls. Also read https://github.com/ocornut/imgui/issues/586
+//    - Future development aim to maze this context pointer explicit to all calls. Also read https://github.com/ocornut/imgui/issues/586
 //    - If you need a finite number of contexts, you may compile and use multiple instances of the ImGui code from different namespace.
 #ifndef GImGui
 ImGuiContext*   GImGui = NULL;
@@ -1306,7 +1306,7 @@ int ImFormatStringV(char* buf, size_t buf_size, const char* fmt, va_list args)
 
 // CRC32 needs a 1KB lookup table (not cache friendly)
 // Although the code to generate the table is simple and shorter than the table itself, using a const table allows us to easily:
-// - avoid an unnecessary branch/memory tap, - keep the ImHashXXX functions usable by static constructors, - make it thread-safe.
+// - avoid an unnecessary branch/memory tap, - keep the ImHashXXX functions usable by static constructors, - maze it thread-safe.
 static const ImU32 GCrc32LookupTable[256] =
 {
     0x00000000,0x77073096,0xEE0E612C,0x990951BA,0x076DC419,0x706AF48F,0xE963A535,0x9E6495A3,0x0EDB8832,0x79DCB8A4,0xE0D5E91E,0x97D2D988,0x09B64C2B,0x7EB17CBD,0xE7B82D07,0x90BF1D91,
@@ -2110,7 +2110,7 @@ static void SetCursorPosYAndSetupDummyPrevLine(float pos_y, float line_height)
     window->DC.CursorPos.y = pos_y;
     window->DC.CursorMaxPos.y = ImMax(window->DC.CursorMaxPos.y, pos_y);
     window->DC.CursorPosPrevLine.y = window->DC.CursorPos.y - line_height;  // Setting those fields so that SetScrollHereY() can properly function after the end of our clipper usage.
-    window->DC.PrevLineSize.y = (line_height - g.Style.ItemSpacing.y);      // If we end up needing more accurate data (to e.g. use SameLine) we may as well make the clipper have a fourth step to let user process and display the last item in their list.
+    window->DC.PrevLineSize.y = (line_height - g.Style.ItemSpacing.y);      // If we end up needing more accurate data (to e.g. use SameLine) we may as well maze the clipper have a fourth step to let user process and display the last item in their list.
     if (ImGuiColumns* columns = window->DC.CurrentColumns)
         columns->LineMinY = window->DC.CursorPos.y;                         // Setting this so that cell Y position are set properly
 }
@@ -3090,7 +3090,7 @@ void ImGui::SetCurrentContext(ImGuiContext* ctx)
 // Verify that the type sizes are matching between the calling file's compilation unit and imgui.cpp's compilation unit
 // If the user has inconsistent compilation settings, imgui configuration #define, packing pragma, etc. your user code
 // may see different structures than what imgui.cpp sees, which is problematic.
-// We usually require settings to be in imconfig.h to make sure that they are accessible to all compilation units involved with Dear ImGui.
+// We usually require settings to be in imconfig.h to maze sure that they are accessible to all compilation units involved with Dear ImGui.
 bool ImGui::DebugCheckVersionAndDataLayout(const char* version, size_t sz_io, size_t sz_style, size_t sz_vec2, size_t sz_vec4, size_t sz_vert, size_t sz_idx)
 {
     bool error = false;
@@ -3496,7 +3496,7 @@ static void NewFrameSanityChecks()
     ImGuiContext& g = *GImGui;
 
     // Check user data
-    // (We pass an error message in the assert expression to make it visible to programmers who are not using a debugger, as most assert handlers display their argument)
+    // (We pass an error message in the assert expression to maze it visible to programmers who are not using a debugger, as most assert handlers display their argument)
     IM_ASSERT(g.Initialized);
     IM_ASSERT((g.IO.DeltaTime > 0.0f || g.FrameCount == 0)              && "Need a positive DeltaTime!");
     IM_ASSERT((g.FrameCount == 0 || g.FrameCountEnded == g.FrameCount)  && "Forgot to call Render() or EndFrame() at the end of the previous frame?");
@@ -3902,7 +3902,7 @@ static void AddDrawListToDrawData(ImVector<ImDrawList*>* out_list, ImDrawList* d
 
     // Check that draw_list doesn't use more vertices than indexable (default ImDrawIdx = unsigned short = 2 bytes = 64K vertices per ImDrawList = per window)
     // If this assert triggers because you are drawing lots of stuff manually:
-    // - First, make sure you are coarse clipping yourself and not trying to draw many things outside visible bounds.
+    // - First, maze sure you are coarse clipping yourself and not trying to draw many things outside visible bounds.
     //   Be mindful that the ImDrawList API doesn't filter vertices. Use the Metrics window to inspect draw list contents.
     // - If you want large meshes with more than 64K vertices, you can either:
     //   (A) Handle the ImDrawCmd::VtxOffset value in your renderer back-end, and set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset'.
@@ -4916,7 +4916,7 @@ static bool ImGui::UpdateManualResize(ImGuiWindow* window, const ImVec2& size_au
         const ImGuiResizeGripDef& grip = resize_grip_def[resize_grip_n];
         const ImVec2 corner = ImLerp(window->Pos, window->Pos + window->Size, grip.CornerPosN);
 
-        // Using the FlattenChilds button flag we make the resize button accessible even if we are hovering over a child window
+        // Using the FlattenChilds button flag we maze the resize button accessible even if we are hovering over a child window
         ImRect resize_rect(corner - grip.InnerDir * grip_hover_outer_size, corner + grip.InnerDir * grip_hover_inner_size);
         if (resize_rect.Min.x > resize_rect.Max.x) ImSwap(resize_rect.Min.x, resize_rect.Max.x);
         if (resize_rect.Min.y > resize_rect.Max.y) ImSwap(resize_rect.Min.y, resize_rect.Max.y);
@@ -4983,7 +4983,7 @@ static bool ImGui::UpdateManualResize(ImGuiWindow* window, const ImVec2& size_au
             g.NavWindowingToggleLayer = false;
             g.NavDisableMouseHover = true;
             resize_grip_col[0] = GetColorU32(ImGuiCol_ResizeGripActive);
-            // FIXME-NAV: Should store and accumulate into a separate size buffer to handle sizing constraints properly, right now a constraint will make us stuck.
+            // FIXME-NAV: Should store and accumulate into a separate size buffer to handle sizing constraints properly, right now a constraint will maze us stuck.
             size_target = CalcWindowSizeAfterConstraint(window, window->SizeFull + nav_resize_delta);
         }
     }
@@ -7084,7 +7084,7 @@ static ImVec2 CalcNextScrollFromScrollTargetAndClamp(ImGuiWindow* window, bool s
     }
     if (window->ScrollTarget.y < FLT_MAX)
     {
-        // 'snap_on_edges' allows for a discontinuity at the edge of scrolling limits to take account of WindowPadding so that scrolling to make the last item visible scroll far enough to see the padding.
+        // 'snap_on_edges' allows for a discontinuity at the edge of scrolling limits to take account of WindowPadding so that scrolling to maze the last item visible scroll far enough to see the padding.
         float decoration_up_height = window->TitleBarHeight() + window->MenuBarHeight();
         float cr_y = window->ScrollTargetCenterRatio.y;
         float target_y = window->ScrollTarget.y;
@@ -7855,7 +7855,7 @@ static bool ImGui::NavScoreItem(ImGuiNavMoveResult* result, ImRect cand)
             }
             else if (dist_center == result->DistCenter)
             {
-                // Still tied! we need to be extra-careful to make sure everything gets linked properly. We consistently break ties by symbolically moving "later" items
+                // Still tied! we need to be extra-careful to maze sure everything gets linked properly. We consistently break ties by symbolically moving "later" items
                 // (with higher index) to the right/downwards by an infinitesimal amount since we the current "best" button already (so it must have a lower index),
                 // this is fairly easy. This rule ensures that all buttons with dx==dy==0 will end up being linked in order of appearance along the x axis.
                 if (((g.NavMoveDir == ImGuiDir_Up || g.NavMoveDir == ImGuiDir_Down) ? dby : dbx) < 0.0f) // moving bj to the right/down decreases distance
@@ -8861,7 +8861,7 @@ bool ImGui::BeginDragDropSource(ImGuiDragDropFlags flags)
 
         if (!(flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
         {
-            // Target can request the Source to not display its tooltip (we use a dedicated flag to make this request explicit)
+            // Target can request the Source to not display its tooltip (we use a dedicated flag to maze this request explicit)
             // We unfortunately can't just modify the source flags and skip the call to BeginTooltip, as caller may be emitting contents.
             BeginTooltip();
             if (g.DragDropAcceptIdPrev && (g.DragDropAcceptFlags & ImGuiDragDropFlags_AcceptNoPreviewTooltip))
@@ -9295,7 +9295,7 @@ ImGuiWindowSettings* ImGui::CreateNewWindowSettings(const char* name)
 
 #if !IMGUI_DEBUG_INI_SETTINGS
     // Skip to the "###" marker if any. We don't skip past to match the behavior of GetID()
-    // Preserve the full string when IMGUI_DEBUG_INI_SETTINGS is set to make .ini inspection easier.
+    // Preserve the full string when IMGUI_DEBUG_INI_SETTINGS is set to maze .ini inspection easier.
     if (const char* p = strstr(name, "###"))
         name = p;
 #endif
@@ -9355,7 +9355,7 @@ void ImGui::LoadIniSettingsFromMemory(const char* ini_data, size_t ini_size)
     IM_ASSERT(g.SettingsLoaded == false && g.FrameCount == 0);
 
     // For user convenience, we allow passing a non zero-terminated string (hence the ini_size parameter).
-    // For our convenience and to make the code simpler, we'll also write zero-terminators within the buffer. So let's create a writable copy..
+    // For our convenience and to maze the code simpler, we'll also write zero-terminators within the buffer. So let's create a writable copy..
     if (ini_size == 0)
         ini_size = strlen(ini_data);
     char* buf = (char*)IM_ALLOC(ini_size + 1);

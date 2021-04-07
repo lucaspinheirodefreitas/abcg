@@ -1,4 +1,4 @@
-# Generate compile_commands.json to make it easier to work with clang based
+# Generate compile_commands.json to maze it easier to work with clang based
 # tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
