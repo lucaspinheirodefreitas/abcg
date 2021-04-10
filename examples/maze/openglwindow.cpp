@@ -1,32 +1,18 @@
 #include "openglwindow.h"
 
-#include <fmt/core.h>
 #include <tiny_obj_loader.h>
 
-#include <cppitertools/itertools.hpp>
-#include <glm/gtx/hash.hpp>
-#include <unordered_map>
-
-#include <unistd.h>
 #include <iostream>
 using namespace std;
-
-// Custom specialization of std::hash injected in namespace std
-namespace std {
-template <>
-struct hash<Vertex> {
-  size_t operator()(Vertex const& vertex) const noexcept {
-    std::size_t h1{std::hash<glm::vec3>()(vertex.position)};
-    return h1;
-  }
-};
-}  // namespace std
 
 void OpenGLWindow::handleEvent(SDL_Event& ev) {
 
   if (ev.type == SDL_KEYDOWN) {
-    if(ev.key.keysym.sym == SDLK_SPACE)
+    if(ev.key.keysym.sym == SDLK_SPACE && m_map) {
+      m_map = false;
+    } else if (ev.key.keysym.sym == SDLK_SPACE){
       m_map = true;
+    }
     if (ev.key.keysym.sym == SDLK_UP)
       m_dollySpeed = 1.0f;
     if (ev.key.keysym.sym == SDLK_DOWN)
@@ -57,118 +43,22 @@ void OpenGLWindow::handleEvent(SDL_Event& ev) {
 }
 
 void OpenGLWindow::initializeGL() {
-  glClearColor(0, 0, 0, 1);
+    glClearColor(0, 0, 0, 1);
 
-  // Enable depth buffering
-  glEnable(GL_DEPTH_TEST);
+    // Enable depth buffering
+    glEnable(GL_DEPTH_TEST);
 
-  // Create program
-  m_program = createProgramFromFile(getAssetsPath() + "lookat.vert",
-                                    getAssetsPath() + "lookat.frag");
+    // Create program
+    m_program = createProgramFromFile(getAssetsPath() + "lookat.vert",
+                                      getAssetsPath() + "lookat.frag");
+    // Load model
+    m_model.loadFromFile(getAssetsPath() + "Maze.obj");
+    m_model_map.loadFromFile(getAssetsPath() + "Maze.obj");
+    m_model.setupVAO(m_program);
+    m_model_map.setupVAO(m_program);
 
-  // Load model
-  loadModelFromFile(getAssetsPath() + "MazeV1.obj");
+    resizeGL(getWindowSettings().width, getWindowSettings().height);
 
-  // Generate VBO
-  glGenBuffers(1, &m_VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices[0]) * m_vertices.size(),
-               m_vertices.data(), GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // Generate EBO
-  glGenBuffers(1, &m_EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices[0]) * m_indices.size(),
-               m_indices.data(), GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  // Create VAO
-  glGenVertexArrays(1, &m_VAO);
-
-  // Bind vertex attributes to current VAO
-  glBindVertexArray(m_VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  GLint positionAttribute{glGetAttribLocation(m_program, "inPosition")};
-  glEnableVertexAttribArray(positionAttribute);
-  glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex), nullptr);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-
-  // End of binding to current VAO
-  glBindVertexArray(0);
-
-  resizeGL(getWindowSettings().width, getWindowSettings().height);
-}
-
-void OpenGLWindow::loadModelFromFile(std::string_view path) {
-  tinyobj::ObjReaderConfig readerConfig;
-  readerConfig.mtl_search_path =
-      getAssetsPath() + "mtl/";  // Path to material files
-
-  tinyobj::ObjReader reader;
-
-  if (!reader.ParseFromFile(path.data(), readerConfig)) {
-    if (!reader.Error().empty()) {
-      throw abcg::Exception{abcg::Exception::Runtime(
-          fmt::format("Failed to load model {} ({})", path, reader.Error()))};
-    }
-    throw abcg::Exception{
-        abcg::Exception::Runtime(fmt::format("Failed to load model {}", path))};
-  }
-
-  if (!reader.Warning().empty()) {
-    fmt::print("Warning: {}\n", reader.Warning());
-  }
-
-  const auto& attrib{reader.GetAttrib()};
-  const auto& shapes{reader.GetShapes()};
-
-  m_vertices.clear();
-  m_indices.clear();
-
-  // A key:value map with key=Vertex and value=index
-  std::unordered_map<Vertex, GLuint> hash{};
-
-  // Loop over shapes
-  for (const auto& shape : shapes) {
-    // Loop over faces(polygon)
-    size_t indexOffset{0};
-    for (const auto faceNumber :
-        iter::range(shape.mesh.num_face_vertices.size())) {
-      // Number of vertices composing face f
-      std::size_t numFaceVertices{shape.mesh.num_face_vertices[faceNumber]};
-      // Loop over vertices in the face
-      std::size_t startIndex{};
-      for (const auto vertexNumber : iter::range(numFaceVertices)) {
-        // Access to vertex
-        tinyobj::index_t index{shape.mesh.indices[indexOffset + vertexNumber]};
-
-        // Vertex coordinates
-        startIndex = 3 * index.vertex_index;
-        tinyobj::real_t vx = attrib.vertices[startIndex + 0];
-        tinyobj::real_t vy = attrib.vertices[startIndex + 1];
-        tinyobj::real_t vz = attrib.vertices[startIndex + 2];
-
-        Vertex vertex{};
-        vertex.position = {vx, vy, vz};
-
-        // If uniqueVertices doesn't contain this vertex
-        if (hash.count(vertex) == 0) {
-          // Add this index (size of m_vertices)
-          hash[vertex] = m_vertices.size();
-          // Add this vertex
-          m_vertices.push_back(vertex);
-        }
-
-        m_indices.push_back(hash[vertex]);
-      }
-      indexOffset += numFaceVertices;
-    }
-  }
 }
 
 void OpenGLWindow::paintGL() {
@@ -180,7 +70,8 @@ void OpenGLWindow::paintGL() {
   glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 
   glUseProgram(m_program);
-  glBindVertexArray(m_VAO);
+  glBindVertexArray(m_model.m_VAO);
+  glBindVertexArray(m_model_map.m_VAO);
 
   // Get location of uniform variables (could be precomputed)
   GLint viewMatrixLoc{glGetUniformLocation(m_program, "viewMatrix")};
@@ -190,107 +81,72 @@ void OpenGLWindow::paintGL() {
 
   // Set uniform variables for viewMatrix and projMatrix
   // These matrices are used for every scene object
-  glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_camera.m_viewMatrix[0][0]);
-  glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_camera.m_projMatrix[0][0]);
+  glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_viewMatrix[0][0]);
+  glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_projMatrix[0][0]);
 
-  // Labirinto
-  glm::mat4 model{1.0f};
-  model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
-  model = glm::scale(model, glm::vec3(0.5f));
+  if(m_map) {
+    // Labirinto
+    glm::mat4 model{1.0f};
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
+    model = glm::scale(model, glm::vec3(1.0f));
 
-  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
-  glUniform4f(colorLoc, 1.0f, 0.9f, 0.7f, 0.6f);
-  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+    glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+    glUniform4f(colorLoc, 0.1f, 0.1f, 0.1f, 0.1f);
+    glDrawElements(GL_TRIANGLES, m_model.m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
-  // Mapa labirinto
-  model = glm::mat4(1.0f);
-  model = glm::translate(model, glm::vec3(-0.51f, 0.69f, 0.0f));
-  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  model = glm::scale(model, glm::vec3(0.003f));
+    // Mapa labirinto
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, m_position_map);
+    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.003f));
 
-  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
-  glUniform4f(colorLoc, 0.0f, 0.2f, 0.2f, 0.5f);
-  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+    glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+    glUniform4f(colorLoc, 0.9f, 0.8f, 0.7f, 0.6f);
+    glDrawElements(GL_TRIANGLES, m_model_map.m_indices.size(), GL_UNSIGNED_INT, nullptr);
+  } else {
+    // Labirinto
+    glm::mat4 model{1.0f};
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
+    model = glm::scale(model, glm::vec3(1.0f));
 
-  m_indices_map = m_indices;
-
+    glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+    glUniform4f(colorLoc, 1.0f, 0.9f, 0.7f, 0.6f);
+    glDrawElements(GL_TRIANGLES, m_model.m_indices.size(), GL_UNSIGNED_INT, nullptr);
+  }
 
   glBindVertexArray(0);
   glUseProgram(0);
 }
 
-void OpenGLWindow::paintUI() { }//abcg::OpenGLWindow::paintUI(); }
+void OpenGLWindow::paintUI() {}
 
 void OpenGLWindow::resizeGL(int width, int height) {
   m_viewportWidth = width;
   m_viewportHeight = height;
 
-  m_camera.computeProjectionMatrix(width, height);
+  m_camera.computeProjectionMatrix(width, height, m_projMatrix);
 }
 
 void OpenGLWindow::terminateGL() {
   glDeleteProgram(m_program);
-  glDeleteBuffers(1, &m_EBO);
-  glDeleteBuffers(1, &m_VBO);
-  glDeleteVertexArrays(1, &m_VAO);
+  glDeleteBuffers(1, &m_model.m_EBO);
+  glDeleteBuffers(1, &m_model.m_VBO);
+  glDeleteVertexArrays(1, &m_model.m_VAO);
 }
 
 void OpenGLWindow::update() {
   float deltaTime{static_cast<float>(getDeltaTime())};
 
-  if(m_map) {
-    m_map = false;
-    cout << "mudança de cor";
-    drawMap();
+  if(!m_map) {
+    // Update LookAt camera
+    m_camera.dolly(m_dollySpeed * deltaTime, m_viewMatrix);
+    m_camera.truck(m_truckSpeed * deltaTime, m_viewMatrix);
+    m_camera.pan(m_panSpeed * deltaTime, m_viewMatrix);
   }
 
-  // Update LookAt camera
-  m_camera.dolly(m_dollySpeed * deltaTime);
-  m_camera.truck(m_truckSpeed * deltaTime);
-  m_camera.pan(m_panSpeed * deltaTime);
-
-  //cout << "m_proj - proj matrix" << m_camera.m_projMatrix << endl;
-  //cout << "m_proj - view matriz" << m_camera.m_viewMatrix << endl;
+  m_position_map.x = m_camera.m_at.x;
+  m_position_map.y = m_camera.m_at.y;
+  m_position_map.z = m_camera.m_at.z;
 }
-
-void OpenGLWindow::drawMap() {
-/*
-  for(const auto indice : m_indices_map) {
-    glColor4ui(1,1,1,1);
-  }
-*/
-
-  // Clear color buffer and depth buffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glViewport(0, 0, m_viewportWidth, m_viewportHeight);
-
-  glUseProgram(m_program);
-  glBindVertexArray(m_VAO);
-
-  // Get location of uniform variables (could be precomputed)
-  GLint viewMatrixLoc{glGetUniformLocation(m_program, "viewMatrix")};
-  GLint projMatrixLoc{glGetUniformLocation(m_program, "projMatrix")};
-  GLint modelMatrixLoc{glGetUniformLocation(m_program, "modelMatrix")};
-  GLint colorLoc{glGetUniformLocation(m_program, "color")};
-
-  // Set uniform variables for viewMatrix and projMatrix
-  // These matrices are used for every scene object
-  glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_camera.m_viewMatrix[0][0]);
-  glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_camera.m_projMatrix[0][0]);
-
-  // Mapa labirinto
-  glm::mat4 model{1.0f};
-  model = glm::translate(model, glm::vec3(0.0f, 0.8f, 0.0f));
-  model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  model = glm::scale(model, glm::vec3(0.005f));
-
-  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
-  glUniform4f(colorLoc, 0.0f, 0.2f, 0.2f, 0.5f);
-  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
-
-  glBindVertexArray(0);
-  glUseProgram(0);
-}
-

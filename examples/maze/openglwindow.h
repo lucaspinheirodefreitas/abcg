@@ -1,16 +1,9 @@
-#ifndef ABCG_OPENGLWINDOW_H
-#define ABCG_OPENGLWINDOW_H
+#ifndef OPENGLWINDOW_H_
+#define OPENGLWINDOW_H_
 
 #include "abcg.hpp"
+#include "model.hpp"
 #include "camera.hpp"
-
-struct Vertex {
-  glm::vec3 position;
-
-  bool operator==(const Vertex& other) const {
-    return position == other.position;
-  }
-};
 
 class OpenGLWindow : public abcg::OpenGLWindow {
  protected:
@@ -20,29 +13,27 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void paintUI() override;
   void resizeGL(int width, int height) override;
   void terminateGL() override;
-  void drawMap();
 
  private:
-  GLuint m_VAO{};
-  GLuint m_VBO{};
-  GLuint m_EBO{};
   GLuint m_program{};
 
   int m_viewportWidth{};
   int m_viewportHeight{};
+
+  Model m_model_map;
+  bool m_map = false;
+  glm::vec3 m_position_map{glm::vec3(0)};
+  Model m_model;
 
   Camera m_camera;
   float m_dollySpeed{0.0f};
   float m_truckSpeed{0.0f};
   float m_panSpeed{0.0f};
 
-  std::vector<Vertex> m_vertices;
-  std::vector<GLuint> m_indices;
-  std::vector<GLuint> m_indices_map;
+  glm::mat4 m_viewMatrix{1.0f};
+  glm::mat4 m_projMatrix{1.0f};
 
-  bool m_map = false;
-
-  void loadModelFromFile(std::string_view path);
   void update();
 };
+
 #endif

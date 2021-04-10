@@ -1,11 +1,13 @@
-# Feature:
-Desenvolvimento de jogo similar ao Arkanoid. 
-<p>Construído sobre o framework abcg, e utilizando como base o jogo asteroids.</p>
-<img src="/examples/arkanoid/assets/arkanoid.jpg">
-<p>A premissa do jogo é utilizar a bola para destruir todos os retangulos presentes no cenário sem deixar que a bola caia.</p>
+# Feature 2:
+Desenvolvimento - renderização 3D de um labirinto.
+<p>Construído sobre o framework abcg.</p>
+<p>A principio não existem regras parciais que limitem a navegação sobre o labirinto.
+Foram implementadas apenas duas funcionalidades, mostrar mapa ao pressionar a tecla espaço e navegar utilizando as setas 
+do teclado. A ideia é implementar mais funcionalidades nas proximas entregas.</p>
 
 # GitHub Page:
-> https://lucaspinheirodefreitas.github.io/abcg/arkanoid/index.html
+> https://lucaspinheirodefreitas.github.io/abcg/maze/index.html
+
 
 ## Author
 
