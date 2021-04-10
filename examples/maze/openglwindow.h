@@ -20,6 +20,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void paintUI() override;
   void resizeGL(int width, int height) override;
   void terminateGL() override;
+  void drawMap();
 
  private:
   GLuint m_VAO{};
@@ -37,6 +38,9 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   std::vector<Vertex> m_vertices;
   std::vector<GLuint> m_indices;
+  std::vector<GLuint> m_indices_map;
+
+  bool m_map = false;
 
   void loadModelFromFile(std::string_view path);
   void update();

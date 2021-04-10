@@ -1,12 +1,15 @@
 #include "openglwindow.h"
 
 #include <fmt/core.h>
-#include <imgui.h>
 #include <tiny_obj_loader.h>
 
 #include <cppitertools/itertools.hpp>
 #include <glm/gtx/hash.hpp>
 #include <unordered_map>
+
+#include <unistd.h>
+#include <iostream>
+using namespace std;
 
 // Custom specialization of std::hash injected in namespace std
 namespace std {
@@ -20,29 +23,32 @@ struct hash<Vertex> {
 }  // namespace std
 
 void OpenGLWindow::handleEvent(SDL_Event& ev) {
+
   if (ev.type == SDL_KEYDOWN) {
-    if (ev.key.keysym.sym == SDLK_UP || ev.key.keysym.sym == SDLK_w)
+    if(ev.key.keysym.sym == SDLK_SPACE)
+      m_map = true;
+    if (ev.key.keysym.sym == SDLK_UP)
       m_dollySpeed = 1.0f;
-    if (ev.key.keysym.sym == SDLK_DOWN || ev.key.keysym.sym == SDLK_s)
+    if (ev.key.keysym.sym == SDLK_DOWN)
       m_dollySpeed = -1.0f;
-    if (ev.key.keysym.sym == SDLK_LEFT || ev.key.keysym.sym == SDLK_a)
+    if (ev.key.keysym.sym == SDLK_LEFT)
       m_panSpeed = -1.0f;
-    if (ev.key.keysym.sym == SDLK_RIGHT || ev.key.keysym.sym == SDLK_d)
+    if (ev.key.keysym.sym == SDLK_RIGHT)
       m_panSpeed = 1.0f;
     if (ev.key.keysym.sym == SDLK_q) m_truckSpeed = -1.0f;
     if (ev.key.keysym.sym == SDLK_e) m_truckSpeed = 1.0f;
   }
   if (ev.type == SDL_KEYUP) {
-    if ((ev.key.keysym.sym == SDLK_UP || ev.key.keysym.sym == SDLK_w) &&
+    if ((ev.key.keysym.sym == SDLK_UP) &&
         m_dollySpeed > 0)
       m_dollySpeed = 0.0f;
-    if ((ev.key.keysym.sym == SDLK_DOWN || ev.key.keysym.sym == SDLK_s) &&
+    if ((ev.key.keysym.sym == SDLK_DOWN) &&
         m_dollySpeed < 0)
       m_dollySpeed = 0.0f;
-    if ((ev.key.keysym.sym == SDLK_LEFT || ev.key.keysym.sym == SDLK_a) &&
+    if ((ev.key.keysym.sym == SDLK_LEFT) &&
         m_panSpeed < 0)
       m_panSpeed = 0.0f;
-    if ((ev.key.keysym.sym == SDLK_RIGHT || ev.key.keysym.sym == SDLK_d) &&
+    if ((ev.key.keysym.sym == SDLK_RIGHT) &&
         m_panSpeed > 0)
       m_panSpeed = 0.0f;
     if (ev.key.keysym.sym == SDLK_q && m_truckSpeed < 0) m_truckSpeed = 0.0f;
@@ -187,15 +193,28 @@ void OpenGLWindow::paintGL() {
   glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_camera.m_viewMatrix[0][0]);
   glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_camera.m_projMatrix[0][0]);
 
-  // Draw white bunny
+  // Labirinto
   glm::mat4 model{1.0f};
-  model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+  model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
   model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
-  model = glm::scale(model, glm::vec3(1.2f));
+  model = glm::scale(model, glm::vec3(0.5f));
 
   glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
   glUniform4f(colorLoc, 1.0f, 0.9f, 0.7f, 0.6f);
   glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  // Mapa labirinto
+  model = glm::mat4(1.0f);
+  model = glm::translate(model, glm::vec3(-0.51f, 0.69f, 0.0f));
+  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::scale(model, glm::vec3(0.003f));
+
+  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  glUniform4f(colorLoc, 0.0f, 0.2f, 0.2f, 0.5f);
+  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  m_indices_map = m_indices;
+
 
   glBindVertexArray(0);
   glUseProgram(0);
@@ -220,8 +239,58 @@ void OpenGLWindow::terminateGL() {
 void OpenGLWindow::update() {
   float deltaTime{static_cast<float>(getDeltaTime())};
 
+  if(m_map) {
+    m_map = false;
+    cout << "mudança de cor";
+    drawMap();
+  }
+
   // Update LookAt camera
   m_camera.dolly(m_dollySpeed * deltaTime);
   m_camera.truck(m_truckSpeed * deltaTime);
   m_camera.pan(m_panSpeed * deltaTime);
+
+  //cout << "m_proj - proj matrix" << m_camera.m_projMatrix << endl;
+  //cout << "m_proj - view matriz" << m_camera.m_viewMatrix << endl;
 }
+
+void OpenGLWindow::drawMap() {
+/*
+  for(const auto indice : m_indices_map) {
+    glColor4ui(1,1,1,1);
+  }
+*/
+
+  // Clear color buffer and depth buffer
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+
+  glUseProgram(m_program);
+  glBindVertexArray(m_VAO);
+
+  // Get location of uniform variables (could be precomputed)
+  GLint viewMatrixLoc{glGetUniformLocation(m_program, "viewMatrix")};
+  GLint projMatrixLoc{glGetUniformLocation(m_program, "projMatrix")};
+  GLint modelMatrixLoc{glGetUniformLocation(m_program, "modelMatrix")};
+  GLint colorLoc{glGetUniformLocation(m_program, "color")};
+
+  // Set uniform variables for viewMatrix and projMatrix
+  // These matrices are used for every scene object
+  glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_camera.m_viewMatrix[0][0]);
+  glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_camera.m_projMatrix[0][0]);
+
+  // Mapa labirinto
+  glm::mat4 model{1.0f};
+  model = glm::translate(model, glm::vec3(0.0f, 0.8f, 0.0f));
+  model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::scale(model, glm::vec3(0.005f));
+
+  glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  glUniform4f(colorLoc, 0.0f, 0.2f, 0.2f, 0.5f);
+  glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+}
+
