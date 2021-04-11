@@ -18,7 +18,7 @@ void main() {
   gl_Position = projMatrix * posEyeSpace;
 }# Blender v2.79 (sub 0) OBJ File: 'MazeV1.blend'
 # www.blender.org
-mtllib MazeV1.mtl
+mtllib Maze.mtl
 o Maze_Cube.002
 v -49.607780 -0.199091 49.914936
 v -49.607780 0.200911 49.914936
