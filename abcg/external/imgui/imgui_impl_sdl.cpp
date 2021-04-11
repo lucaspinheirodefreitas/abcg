@@ -404,6 +404,6 @@ void ImGui_ImplSDL2_NewFrame(SDL_Window *window) {
   ImGui_ImplSDL2_UpdateMousePosAndButtons();
   ImGui_ImplSDL2_UpdateMouseCursor();
 
-  // Update arkanoid controllers (if enabled and available)
+  // Update maze controllers (if enabled and available)
   ImGui_ImplSDL2_UpdateGamepads();
 }
