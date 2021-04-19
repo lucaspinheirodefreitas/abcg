@@ -14,9 +14,11 @@ class Camera {
   void dolly(float speed, glm::mat4 &m_viewMatrix);
   void truck(float speed, glm::mat4 &m_viewMatrix);
   void pan(float speed, glm::mat4 &m_viewMatrix);
+  [[nodiscard]] glm::mat4 getRotation();
 
  private:
   friend OpenGLWindow;
+  glm::mat4 m_rotation{1.0f};
 
   glm::vec3 m_eye{glm::vec3(0.0f, 0.5f, 0.5f)};  // Camera position
   glm::vec3 m_at{glm::vec3(0.0f, 0.5f, 0.0f)};   // Look-at point
