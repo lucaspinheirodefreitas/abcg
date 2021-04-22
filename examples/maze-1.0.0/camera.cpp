@@ -9,7 +9,7 @@ using namespace std;
 void Camera::computeProjectionMatrix(int width, int height, glm::mat4 &m_projMatrix) {
   m_projMatrix = glm::mat4(1.0f);
   auto aspect{static_cast<float>(width) / static_cast<float>(height)};
-  m_projMatrix = glm::perspective(glm::radians(90.0f), aspect, 0.1f, 10.0f);
+  m_projMatrix = glm::perspective(glm::radians(90.0f), aspect, 0.1f, 15.0f);
 }
 
 void Camera::computeViewMatrix(glm::mat4 &m_viewMatrix) {

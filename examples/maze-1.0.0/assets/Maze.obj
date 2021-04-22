@@ -1,6 +1,6 @@
-# Blender v2.79 (sub 0) OBJ File: 'MazeV1.blend'
+# Blender v2.79 (sub 0) OBJ File: 'Maze1.blend'
 # www.blender.org
-mtllib Maze.mtl
+mtllib Maze1.mtl
 o Maze_Cube.002
 v -49.607780 -0.199091 49.914936
 v -49.607780 0.200911 49.914936
@@ -7721,7 +7721,7 @@ vn 0.0000 0.0000 1.0000
 vn 0.0000 -1.0000 0.0000
 vn 1.0000 0.0000 0.0000
 vn 1.0000 0.0000 -0.0023
-usemtl None
+usemtl Maze1
 s off
 f 9//1 12//1 4//1 3//1
 f 3//2 4//2 8//2 7//2

@@ -1,2 +1,1 @@
-#add_subdirectory(viewer2)
-add_subdirectory(maze)
+add_subdirectory(maze-1.0.0)

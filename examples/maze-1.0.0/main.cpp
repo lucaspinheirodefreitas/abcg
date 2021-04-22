@@ -1,16 +1,16 @@
 #include <fmt/core.h>
 
 #include "abcg.hpp"
-#include "openglwindow.h"
+#include "openglwindow.hpp"
 
 int main(int argc, char **argv) {
   try {
     abcg::Application app(argc, argv);
 
     auto window{std::make_unique<OpenGLWindow>()};
-    window->setOpenGLSettings({.samples = 4});
+    window->setOpenGLSettings({.samples = 0});
     window->setWindowSettings(
-        {.width = 600, .height = 600, .title = "Maze"});
+        {.width = 600, .height = 600, .title = "Model Viewer (version 5)"});
 
     app.run(window);
   } catch (abcg::Exception &exception) {
