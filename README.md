@@ -14,14 +14,14 @@ Renderização 3D de labirinto.
 Foram implementadas apenas duas funcionalidades, mostrar mapa ao pressionar a tecla espaço e navegar utilizando as setas 
 do teclado.</p
   
-  # GitHub Page:
+# GitHub Page:
 > https://lucaspinheirodefreitas.github.io/abcg/maze/index.html
 
 # Feature 3: Maze-1.0.0
 Implementação de iluminação e textura com base na feature 2.
 <p>Nessa entrega foram incrementadas combinações de efeitos de "iluminação" e/ ou "textura" que podem ser selecionadas através das caixas de seleção exibidas no canto superior direito da tela.</p
 
-  # GitHub Page:
+# GitHub Page:
 > https://lucaspinheirodefreitas.github.io/abcg/maze-1.0.0/index.html
 
 ## Author
