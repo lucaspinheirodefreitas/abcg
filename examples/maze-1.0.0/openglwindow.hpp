@@ -54,7 +54,6 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::vec4 m_Ks{};
   float m_shininess{};
 
-  bool m_frente = true;
   bool m_map = false;
   glm::vec3 m_position_map{glm::vec3(0)};
   glm::vec3 m_scale_map{glm::vec3(0.035f)};

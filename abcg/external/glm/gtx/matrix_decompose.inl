@@ -101,7 +101,7 @@ namespace detail
 
 		Row[0] = detail::scale(Row[0], static_cast<T>(1));
 
-		// Compute XY shear factor and maze 2nd row orthogonal to 1st.
+		// Compute XY shear factor and maze-1.0.0 2nd row orthogonal to 1st.
 		Skew.z = dot(Row[0], Row[1]);
 		Row[1] = detail::combine(Row[1], Row[0], static_cast<T>(1), -Skew.z);
 

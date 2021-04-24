@@ -14,22 +14,14 @@ void OpenGLWindow::handleEvent(SDL_Event& ev) {
     } else if (ev.key.keysym.sym == SDLK_SPACE) {
       m_map = true;
     }
-    if (!m_map) {
-      if (ev.key.keysym.sym == SDLK_UP && m_frente) {
-        m_dollySpeed = 2.0f;
-      }
-      else if (ev.key.keysym.sym == SDLK_DOWN) {
-        m_dollySpeed = -2.0f;
-        m_frente = true;
-      }
-      else if (ev.key.keysym.sym == SDLK_LEFT) m_panSpeed = -2.0f;
-      else if (ev.key.keysym.sym == SDLK_RIGHT) m_panSpeed = 2.0f;
-    } else {
-      if (ev.key.keysym.sym == SDLK_LEFT) m_panSpeed = -2.0f;
-      else if (ev.key.keysym.sym == SDLK_RIGHT) m_panSpeed = 2.0f;
-    }
-
-
+    if (ev.key.keysym.sym == SDLK_UP) {
+      m_dollySpeed = 2.0f;
+    } else if (ev.key.keysym.sym == SDLK_DOWN) {
+      m_dollySpeed = -2.0f;
+    } else if (ev.key.keysym.sym == SDLK_LEFT)
+      m_panSpeed = -2.0f;
+    else if (ev.key.keysym.sym == SDLK_RIGHT)
+      m_panSpeed = 2.0f;
   }
   if (ev.type == SDL_KEYUP) {
     if ((ev.key.keysym.sym == SDLK_UP) && m_dollySpeed > 0) m_dollySpeed = 0.0f;
@@ -149,20 +141,12 @@ void OpenGLWindow::paintGL() {
 }
 
 void OpenGLWindow::paintUI() {
-
   // File browser for models
   static ImGui::FileBrowser fileDialogModel;
   fileDialogModel.SetTitle("Load 3D Model");
   fileDialogModel.SetTypeFilters({".obj"});
   fileDialogModel.SetWindowSize(m_viewportWidth * 0.8f,
                                 m_viewportHeight * 0.8f);
-
-// Only in WebGL
-#if defined(__EMSCRIPTEN__)
-  fileDialogModel.SetPwd(getAssetsPath());
-  fileDialogDiffuseMap.SetPwd(getAssetsPath() + "/maps");
-  fileDialogNormalMap.SetPwd(getAssetsPath() + "/maps");
-#endif
 
   // Create main window widget
   {
@@ -273,8 +257,4 @@ void OpenGLWindow::update() {
   m_camera.dolly(m_dollySpeed * deltaTime, m_viewMatrix);
   m_camera.truck(m_truckSpeed * deltaTime, m_viewMatrix);
   m_camera.pan(m_panSpeed * deltaTime, m_viewMatrix);
-
-  if(m_camera.m_eye.x+0.1f>=m_camera.m_at.x) {
-    m_frente=false;
-  }
 }

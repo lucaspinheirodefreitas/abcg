@@ -18,7 +18,7 @@
 #define GSL_BYTE_H
 
 //
-// maze suppress attributes work for some compilers
+// maze-1.0.0 suppress attributes work for some compilers
 // Hopefully temporary until suppression standardization occurs
 //
 #if defined(__clang__)

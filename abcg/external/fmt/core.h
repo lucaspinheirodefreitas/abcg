@@ -118,7 +118,7 @@
 #  endif
 #endif
 
-// Define FMT_USE_NOEXCEPT to maze fmt use noexcept (C++11 feature).
+// Define FMT_USE_NOEXCEPT to maze-1.0.0 fmt use noexcept (C++11 feature).
 #ifndef FMT_USE_NOEXCEPT
 #  define FMT_USE_NOEXCEPT 0
 #endif
@@ -487,7 +487,7 @@ inline basic_string_view<Char> to_string_view(detail::std_string_view<Char> s) {
 }
 
 // A base class for compile-time strings. It is defined in the fmt namespace to
-// maze formatting functions visible via ADL, e.g. format(FMT_STRING("{}"), 42).
+// maze-1.0.0 formatting functions visible via ADL, e.g. format(FMT_STRING("{}"), 42).
 struct compile_string {};
 
 template <typename S>
@@ -1358,7 +1358,7 @@ template <typename T> struct formattable : std::false_type {};
 
 namespace detail {
 
-// A workaround for gcc 4.8 to maze void_t work in a SFINAE context.
+// A workaround for gcc 4.8 to maze-1.0.0 void_t work in a SFINAE context.
 template <typename... Ts> struct void_t_impl { using type = void; };
 template <typename... Ts>
 using void_t = typename detail::void_t_impl<Ts...>::type;
@@ -1421,7 +1421,7 @@ FMT_CONSTEXPR basic_format_arg<Context> make_arg(const T& value) {
 template <typename T> int check(unformattable) {
   static_assert(
       formattable<T>(),
-      "Cannot format an argument. To maze type T formattable provide a "
+      "Cannot format an argument. To maze-1.0.0 type T formattable provide a "
       "formatter<T> specialization: https://fmt.dev/latest/api.html#udt");
   return 0;
 }
@@ -1507,7 +1507,7 @@ template <typename OutputIt, typename Char> class basic_format_context {
   void operator=(const basic_format_context&) = delete;
   /**
    Constructs a ``basic_format_context`` object. References to the arguments are
-   stored in the object so maze sure they have appropriate lifetimes.
+   stored in the object so maze-1.0.0 sure they have appropriate lifetimes.
    */
   basic_format_context(OutputIt out,
                        basic_format_args<basic_format_context> ctx_args,
@@ -1937,7 +1937,7 @@ using format_args = basic_format_args<format_context>;
 using wformat_args = basic_format_args<wformat_context>;
 #else
 // DEPRECATED! These are kept for ABI compatibility.
-// It is a separate type rather than an alias to maze symbols readable.
+// It is a separate type rather than an alias to maze-1.0.0 symbols readable.
 struct format_args : basic_format_args<format_context> {
   template <typename... Args>
   FMT_INLINE format_args(const Args&... args) : basic_format_args(args...) {}

@@ -33,7 +33,7 @@
 /// C++ has no language equivalent to qualifier qualifiers. So GLM provides the next-best thing:
 /// a number of typedefs that use a particular qualifier.
 ///
-/// None of these types maze any guarantees about the actual qualifier used.
+/// None of these types maze-1.0.0 any guarantees about the actual qualifier used.
 ///
 /// @ingroup core
 ///
@@ -57,7 +57,7 @@
 /// C++ has no language equivalent to qualifier qualifiers. So GLM provides the next-best thing:
 /// a number of typedefs that use a particular qualifier.
 ///
-/// None of these types maze any guarantees about the actual qualifier used.
+/// None of these types maze-1.0.0 any guarantees about the actual qualifier used.
 ///
 /// @ingroup core
 ///

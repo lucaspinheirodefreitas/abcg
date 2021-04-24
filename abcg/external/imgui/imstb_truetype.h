@@ -57,9 +57,9 @@
 //   1.20 (2019-02-07) PackFontRange skips missing codepoints; GetScaleFontVMetrics()
 //   1.19 (2018-02-11) GPOS kerning, STBTT_fmod
 //   1.18 (2018-01-29) add missing function
-//   1.17 (2017-07-23) maze more arguments const; doc fix
+//   1.17 (2017-07-23) maze-1.0.0 more arguments const; doc fix
 //   1.16 (2017-07-12) SDF support
-//   1.15 (2017-03-03) maze more arguments const
+//   1.15 (2017-03-03) maze-1.0.0 more arguments const
 //   1.14 (2017-01-16) num-fonts-in-TTC function
 //   1.13 (2017-01-02) support OpenType fonts, certain Apple fonts
 //   1.12 (2016-10-25) suppress warnings about casting away const with -Wcast-qual
@@ -87,7 +87,7 @@
 //   before the #include of this file. This expands out the actual
 //   implementation into that C/C++ file.
 //
-//   To maze the implementation private to the file that generates the implementation,
+//   To maze-1.0.0 the implementation private to the file that generates the implementation,
 //      #define STBTT_STATIC
 //
 //   Simple 3D API (don't ship this, but it's fine for tools and quick start)
@@ -170,7 +170,7 @@
 //         Most font APIs instead use "points", which are a common typographic
 //         measurement for describing font size, defined as 72 points per inch.
 //         stb_truetype provides a point API for compatibility. However, true
-//         "per inch" conventions don't maze much sense on computer displays
+//         "per inch" conventions don't maze-1.0.0 much sense on computer displays
 //         since different monitors have different number of pixels per
 //         inch. For example, Windows traditionally uses a convention that
 //         there are 96 pixels per inch, thus making 'inch' measurements have
@@ -945,7 +945,7 @@ STBTT_DEF unsigned char * stbtt_GetCodepointSDF(const stbtt_fontinfo *info, floa
 //        xoff,yoff         --  output origin of the character
 //        return value      --  a 2D array of bytes 0..255, width*height in size
 //
-// pixel_dist_scale & onedge_value are a scale & bias that allows you to maze
+// pixel_dist_scale & onedge_value are a scale & bias that allows you to maze-1.0.0
 // optimal use of the limited 0..255 for your application, trading off precision
 // and special effects. SDF values outside the range 0..255 are clamped to 0..255.
 //
@@ -1427,7 +1427,7 @@ static int stbtt_InitFont_internal(stbtt_fontinfo *info, unsigned char *data, in
       info->numGlyphs = 0xffff;
 
    // find a cmap encoding table we understand *now* to avoid searching
-   // later. (todo: could maze this installable)
+   // later. (todo: could maze-1.0.0 this installable)
    // the same regardless of glyph.
    numTables = ttUSHORT(data + cmap + 2);
    info->index_map = 0;
@@ -3295,7 +3295,7 @@ static void stbtt__sort_edges_quicksort(stbtt__edge *p, int n)
          for (;;--j) {
             if (!STBTT__COMPARE(&p[0], &p[j])) break;
          }
-         /* maze sure we haven't crossed */
+         /* maze-1.0.0 sure we haven't crossed */
          if (i >= j) break;
          t = p[i];
          p[i] = p[j];
@@ -3478,7 +3478,7 @@ static stbtt__point *stbtt_FlattenCurves(stbtt_vertex *vertices, int num_verts, 
       return 0;
    }
 
-   // maze two passes through the points so we don't need to realloc
+   // maze-1.0.0 two passes through the points so we don't need to realloc
    for (pass=0; pass < 2; ++pass) {
       float x=0,y=0;
       if (pass == 1) {
@@ -3862,7 +3862,7 @@ static void stbtt__h_prefilter(unsigned char *pixels, int w, int h, int stride_i
 
       total = 0;
 
-      // maze kernel_width a constant in common cases so compiler can optimize out the divide
+      // maze-1.0.0 kernel_width a constant in common cases so compiler can optimize out the divide
       switch (kernel_width) {
          case 2:
             for (i=0; i <= safe_w; ++i) {
@@ -3924,7 +3924,7 @@ static void stbtt__v_prefilter(unsigned char *pixels, int w, int h, int stride_i
 
       total = 0;
 
-      // maze kernel_width a constant in common cases so compiler can optimize out the divide
+      // maze-1.0.0 kernel_width a constant in common cases so compiler can optimize out the divide
       switch (kernel_width) {
          case 2:
             for (i=0; i <= safe_h; ++i) {
@@ -4304,7 +4304,7 @@ static int stbtt__compute_crossings_x(float x, float y, int nverts, stbtt_vertex
    orig[0] = x;
    //orig[1] = y; // [DEAR IMGUI] commmented double assignment
 
-   // maze sure y never passes through a vertex of the shape
+   // maze-1.0.0 sure y never passes through a vertex of the shape
    y_frac = (float) STBTT_fmod(y, 1.0f);
    if (y_frac < 0.01f)
       y += 0.01f;
@@ -4807,9 +4807,9 @@ STBTT_DEF int stbtt_CompareUTF8toUTF16_bigendian(const char *s1, int len1, const
 //
 //   1.19 (2018-02-11) OpenType GPOS kerning (horizontal only), STBTT_fmod
 //   1.18 (2018-01-29) add missing function
-//   1.17 (2017-07-23) maze more arguments const; doc fix
+//   1.17 (2017-07-23) maze-1.0.0 more arguments const; doc fix
 //   1.16 (2017-07-12) SDF support
-//   1.15 (2017-03-03) maze more arguments const
+//   1.15 (2017-03-03) maze-1.0.0 more arguments const
 //   1.14 (2017-01-16) num-fonts-in-TTC function
 //   1.13 (2017-01-02) support OpenType fonts, certain Apple fonts
 //   1.12 (2016-10-25) suppress warnings about casting away const with -Wcast-qual
@@ -4889,7 +4889,7 @@ software, either in source code form or as a compiled binary, for any purpose,
 commercial or non-commercial, and by any means.
 In jurisdictions that recognize copyright laws, the author or authors of this 
 software dedicate any and all copyright interest in the software to the public 
-domain. We maze this dedication for the benefit of the public at large and to
+domain. We maze-1.0.0 this dedication for the benefit of the public at large and to
 the detriment of our heirs and successors. We intend this dedication to be an 
 overt act of relinquishment in perpetuity of all present and future rights to 
 this software under copyright law.

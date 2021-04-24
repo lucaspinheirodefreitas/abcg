@@ -153,7 +153,7 @@ namespace detail
 			//
 			// Round to nearest, round "0.5" up.
 			//
-			// Rounding may cause the significand to overflow and maze
+			// Rounding may cause the significand to overflow and maze-1.0.0
 			// our number normalized.  Because of the way a half's bits
 			// are laid out, we don't have to treat this case separately;
 			// the code below will handle it correctly.

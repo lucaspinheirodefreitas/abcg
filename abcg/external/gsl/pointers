@@ -197,15 +197,15 @@ namespace gsl
 // Restricts a pointer or smart pointer to only hold non-null values,
 //
 // - provides a strict (i.e. explicit constructor from T) wrapper of not_null
-// - to be used for new code that wishes the design to be cleaner and maze not_null
-//   checks intentional, or in old code that would like to maze the transition.
+// - to be used for new code that wishes the design to be cleaner and maze-1.0.0 not_null
+//   checks intentional, or in old code that would like to maze-1.0.0 the transition.
 //
-//   To maze the transition from not_null, incrementally replace not_null
+//   To maze-1.0.0 the transition from not_null, incrementally replace not_null
 //   by strict_not_null and fix compilation errors
 //
 //   Expect to
 //   - remove all unneeded conversions from raw pointer to not_null and back
-//   - maze API clear by specifying not_null in parameters where needed
+//   - maze-1.0.0 API clear by specifying not_null in parameters where needed
 //   - remove unnecessary asserts
 //
 template <class T>

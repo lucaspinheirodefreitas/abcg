@@ -48,7 +48,7 @@ namespace glm
 			// Different signs means they do not match.
 			if(a.negative() != b.negative())
 			{
-				// Check for equality to maze sure +0==-0
+				// Check for equality to maze-1.0.0 sure +0==-0
 				Result[i] = a.mantissa() == b.mantissa() && a.exponent() == b.exponent();
 			}
 			else

@@ -139,7 +139,7 @@ STBRP_DEF void stbrp_init_target (stbrp_context *context, int width, int height,
 // the call (or calls) finish.
 //
 // Note: to guarantee best results, either:
-//       1. maze sure 'num_nodes' >= 'width'
+//       1. maze-1.0.0 sure 'num_nodes' >= 'width'
 //   or  2. call stbrp_allow_out_of_mem() defined below with 'allow_out_of_mem = 1'
 //
 // If you don't do either of the above things, widths will be quantized to multiples
@@ -625,7 +625,7 @@ software, either in source code form or as a compiled binary, for any purpose,
 commercial or non-commercial, and by any means.
 In jurisdictions that recognize copyright laws, the author or authors of this 
 software dedicate any and all copyright interest in the software to the public 
-domain. We maze this dedication for the benefit of the public at large and to
+domain. We maze-1.0.0 this dedication for the benefit of the public at large and to
 the detriment of our heirs and successors. We intend this dedication to be an 
 overt act of relinquishment in perpetuity of all present and future rights to 
 this software under copyright law.

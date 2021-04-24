@@ -892,7 +892,7 @@ static bool tryParseDouble(const char *s, const char *s_end, double *result) {
       end_not_reached = (curr != s_end);
     }
 
-    // We must maze sure we actually got something.
+    // We must maze-1.0.0 sure we actually got something.
     if (read == 0) goto fail;
   }
 

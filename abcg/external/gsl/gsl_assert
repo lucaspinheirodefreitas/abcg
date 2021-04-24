@@ -39,7 +39,7 @@
 #endif // defined(_MSC_VER) && (defined(_KERNEL_MODE) || (defined(_HAS_EXCEPTIONS) && !_HAS_EXCEPTIONS))
 
 //
-// maze suppress attributes parse for some compilers
+// maze-1.0.0 suppress attributes parse for some compilers
 // Hopefully temporary until suppression standardization occurs
 //
 #if defined(__clang__)

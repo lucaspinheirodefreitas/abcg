@@ -1383,7 +1383,7 @@ void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_exc
         width_excess -= width_to_remove_per_item * count_same_width;
     }
 
-    // Round width and redistribute remainder left-to-right (could maze it an option of the function?)
+    // Round width and redistribute remainder left-to-right (could maze-1.0.0 it an option of the function?)
     // Ensure that e.g. the right-most tab of a shrunk tab-bar always reaches exactly at the same distance from the right-most edge of the tab bar separator.
     width_excess = 0.0f;
     for (int n = 0; n < count; n++)
@@ -1506,7 +1506,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
             SetNextWindowPos(pos);
         }
 
-    // We don't use BeginPopupEx() solely because we have a custom name string, which we could maze an argument to BeginPopupEx()
+    // We don't use BeginPopupEx() solely because we have a custom name string, which we could maze-1.0.0 an argument to BeginPopupEx()
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_Popup | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove;
 
     // Horizontally align ourselves with the framed text
@@ -1575,7 +1575,7 @@ bool ImGui::Combo(const char* label, int* current_item, bool (*items_getter)(voi
         return false;
 
     // Display items
-    // FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to maze sure our call to SetItemDefaultFocus() is processed)
+    // FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to maze-1.0.0 sure our call to SetItemDefaultFocus() is processed)
     bool value_changed = false;
     for (int i = 0; i < items_count; i++)
     {
@@ -3481,12 +3481,12 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
         // Take a copy of the initial buffer value (both in original UTF-8 format and converted to wchar)
         // From the moment we focused we are ignoring the content of 'buf' (unless we are in read-only mode)
         const int buf_len = (int)strlen(buf);
-        state->InitialTextA.resize(buf_len + 1);    // UTF-8. we use +1 to maze sure that .Data is always pointing to at least an empty string.
+        state->InitialTextA.resize(buf_len + 1);    // UTF-8. we use +1 to maze-1.0.0 sure that .Data is always pointing to at least an empty string.
         memcpy(state->InitialTextA.Data, buf, buf_len + 1);
 
         // Start edition
         const char* buf_end = NULL;
-        state->TextW.resize(buf_size + 1);          // wchar count <= UTF-8 count. we use +1 to maze sure that .Data is always pointing to at least an empty string.
+        state->TextW.resize(buf_size + 1);          // wchar count <= UTF-8 count. we use +1 to maze-1.0.0 sure that .Data is always pointing to at least an empty string.
         state->TextA.resize(0);
         state->TextAIsValid = false;                // TextA is not valid yet (we will display buf until then)
         state->CurLenW = ImTextStrFromUtf8(state->TextW.Data, buf_size, buf, NULL, &buf_end);
@@ -4084,7 +4084,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             }
         }
 
-        // We test for 'buf_display_max_length' as a way to avoid some pathological cases (e.g. single-line 1 MB string) which would maze ImDrawList crash.
+        // We test for 'buf_display_max_length' as a way to avoid some pathological cases (e.g. single-line 1 MB string) which would maze-1.0.0 ImDrawList crash.
         if (is_multiline || (buf_display_end - buf_display) < buf_display_max_length)
         {
             ImU32 col = GetColorU32(is_displaying_hint ? ImGuiCol_TextDisabled : ImGuiCol_Text);
@@ -5228,7 +5228,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (display_frame)
     {
         // Framed header expand a little outside the default padding, to the edge of InnerClipRect
-        // (FIXME: May remove this at some point and maze InnerClipRect align with WindowPadding.x instead of WindowPadding.x*0.5f)
+        // (FIXME: May remove this at some point and maze-1.0.0 InnerClipRect align with WindowPadding.x instead of WindowPadding.x*0.5f)
         frame_bb.Min.x -= IM_FLOOR(window->WindowPadding.x * 0.5f - 1.0f);
         frame_bb.Max.x += IM_FLOOR(window->WindowPadding.x * 0.5f);
     }
@@ -5350,7 +5350,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
             frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
         if (g.LogEnabled)
         {
-            // NB: '##' is normally used to hide text (as a library-wide feature), so we need to specify the text range to maze sure the ## aren't stripped out here.
+            // NB: '##' is normally used to hide text (as a library-wide feature), so we need to specify the text range to maze-1.0.0 sure the ## aren't stripped out here.
             const char log_prefix[] = "\n##";
             const char log_suffix[] = "##";
             LogRenderedText(&text_pos, log_prefix, log_prefix+3);
@@ -5498,7 +5498,7 @@ bool ImGui::CollapsingHeader(const char* label, bool* p_open, ImGuiTreeNodeFlags
 //-------------------------------------------------------------------------
 
 // Tip: pass a non-visible label (e.g. "##dummy") then you can use the space to draw other text or image.
-// But you need to maze sure the ID is unique, e.g. enclose calls in PushID/PopID or use ##unique_id.
+// But you need to maze-1.0.0 sure the ID is unique, e.g. enclose calls in PushID/PopID or use ##unique_id.
 bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags flags, const ImVec2& size_arg)
 {
     ImGuiWindow* window = GetCurrentWindow();
@@ -5683,14 +5683,14 @@ bool ImGui::ListBoxHeader(const char* label, int items_count, int height_in_item
 {
     // Size default to hold ~7.25 items.
     // We add +25% worth of item height to allow the user to see at a glance if there are more items up/down, without looking at the scrollbar.
-    // We don't add this extra bit if items_count <= height_in_items. It is slightly dodgy, because it means a dynamic list of items will maze the widget resize occasionally when it crosses that size.
+    // We don't add this extra bit if items_count <= height_in_items. It is slightly dodgy, because it means a dynamic list of items will maze-1.0.0 the widget resize occasionally when it crosses that size.
     // I am expecting that someone will come and complain about this behavior in a remote future, then we can advise on a better solution.
     if (height_in_items < 0)
         height_in_items = ImMin(items_count, 7);
     const ImGuiStyle& style = GetStyle();
     float height_in_items_f = (height_in_items < items_count) ? (height_in_items + 0.25f) : (height_in_items + 0.00f);
 
-    // We include ItemSpacing.y so that a list sized for the exact number of items doesn't maze a scrollbar appears. We could also enforce that by passing a flag to BeginChild().
+    // We include ItemSpacing.y so that a list sized for the exact number of items doesn't maze-1.0.0 a scrollbar appears. We could also enforce that by passing a flag to BeginChild().
     ImVec2 size;
     size.x = 0.0f;
     size.y = ImFloor(GetTextLineHeightWithSpacing() * height_in_items_f + style.FramePadding.y * 2.0f);
@@ -6730,7 +6730,7 @@ static float ImGui::TabBarScrollClamp(ImGuiTabBar* tab_bar, float scrolling)
 static void ImGui::TabBarScrollToTab(ImGuiTabBar* tab_bar, ImGuiTabItem* tab)
 {
     ImGuiContext& g = *GImGui;
-    float margin = g.FontSize * 1.0f; // When to scroll to maze Tab N+1 visible always maze a bit of N visible to suggest more scrolling area (since we don't have a scrollbar)
+    float margin = g.FontSize * 1.0f; // When to scroll to maze-1.0.0 Tab N+1 visible always maze-1.0.0 a bit of N visible to suggest more scrolling area (since we don't have a scrollbar)
     int order = tab_bar->GetTabOrder(tab);
     float tab_x1 = tab->Offset + (order > 0 ? -margin : 0.0f);
     float tab_x2 = tab->Offset + tab->Width + (order + 1 < tab_bar->Tabs.Size ? margin : 1.0f);
@@ -6801,7 +6801,7 @@ static ImGuiTabItem* ImGui::TabBarScrollingButtons(ImGuiTabBar* tab_bar)
         {
             int selected_order = tab_bar->GetTabOrder(tab_item);
             int target_order = selected_order + select_dir;
-            tab_to_select = &tab_bar->Tabs[(target_order >= 0 && target_order < tab_bar->Tabs.Size) ? target_order : selected_order]; // If we are at the end of the list, still scroll to maze our tab visible
+            tab_to_select = &tab_bar->Tabs[(target_order >= 0 && target_order < tab_bar->Tabs.Size) ? target_order : selected_order]; // If we are at the end of the list, still scroll to maze-1.0.0 our tab visible
         }
     window->DC.CursorPos = backup_cursor_pos;
     tab_bar->BarRect.Max.x -= scrolling_buttons_width + 1.0f;
@@ -6914,7 +6914,7 @@ bool    ImGui::TabItemEx(ImGuiTabBar* tab_bar, const char* label, bool* p_open, 
     const ImGuiStyle& style = g.Style;
     const ImGuiID id = TabBarCalcTabID(tab_bar, label);
 
-    // If the user called us with *p_open == false, we early out and don't render. We maze a dummy call to ItemAdd() so that attempts to use a contextual popup menu with an implicit ID won't use an older ID.
+    // If the user called us with *p_open == false, we early out and don't render. We maze-1.0.0 a dummy call to ItemAdd() so that attempts to use a contextual popup menu with an implicit ID won't use an older ID.
     if (p_open && !*p_open)
     {
         PushItemFlag(ImGuiItemFlags_NoNav | ImGuiItemFlags_NoNavDefaultFocus, true);
@@ -7391,7 +7391,7 @@ ImGuiID ImGui::GetColumnsID(const char* str_id, int columns_count)
     ImGuiWindow* window = GetCurrentWindow();
 
     // Differentiate column ID with an arbitrary prefix for cases where users name their columns set the same as another widget.
-    // In addition, when an identifier isn't explicitly provided we include the number of columns in the hash to maze it uniquer.
+    // In addition, when an identifier isn't explicitly provided we include the number of columns in the hash to maze-1.0.0 it uniquer.
     PushID(0x11223347 + (str_id ? 0 : columns_count));
     ImGuiID id = window->GetID(str_id ? str_id : "columns");
     PopID();
